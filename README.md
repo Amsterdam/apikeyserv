@@ -14,6 +14,7 @@ the API key and one in the Authorization header.
 Running:
 
     cd src
+    pip install -r requirements.txt
     python manage.py makemigrations apikeys signingkeys
     python manage.py migrate
     python manage.py createsuperuser  # Fill out the form
