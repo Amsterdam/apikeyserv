@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.core.exceptions import ValidationError
 
 from .models import ApiKey, SigningKey, get_signing_key
-from .views import pem_public_key
+from .views import public_key
 
 
 class ApiKeyAdmin(admin.ModelAdmin):
@@ -40,7 +40,7 @@ class SigningKeyAdmin(admin.ModelAdmin):
 
     def public_key(self, obj):
         try:
-            pubkey = pem_public_key(obj.private, obj.id)
+            pubkey = public_key(obj.private, obj.id)
         except Exception as e:
             return "INVALID"
 

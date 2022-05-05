@@ -1,13 +1,12 @@
-from cryptography.hazmat.primitives.serialization import (
-    Encoding,
-    PublicFormat,
-    load_pem_private_key,
-)
+import json
+
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from django.http import HttpResponse
-from io import StringIO
 import logging
 from typing import Optional
 
+from .jwks import jwk
 from .models import SigningKey
 
 
@@ -15,39 +14,33 @@ logger = logging.getLogger(__file__)
 
 
 def index(request):
-    # TODO: JWKS of all active signing keys.
+    """Renders all active signing keys as a JWKS."""
     active_keys = SigningKey.objects.filter(active=True)
 
-    output = StringIO()
+    keyset = []
+
     for priv, id in active_keys.values_list("private", "id"):
-        pub = pem_public_key(priv, id)
+        pub = public_key(priv, id)
         if pub is None:
             continue
 
-        output.write(pub)
-        output.write("\n")
+        keyset.append(jwk(pub))
 
-    if (size := output.tell()) > 0:
-        output.truncate(size - 1)  # Remove final newline.
-
-    return HttpResponse(output.getvalue(), content_type="text/plain")
+    jwks = {"keys": keyset}
+    return HttpResponse(json.dumps(jwks), content_type="application/json")
 
 
-def pem_public_key(priv_pem: str, id: int) -> Optional[str]:
-    """Returns the public key, in PEM format, for the private key priv_pem,
-    also in PEM format.
+def public_key(priv_pem: str, id: int) -> Optional[Ed25519PublicKey]:
+    """Returns the public key  for the private key priv_pem, which is in PEM format.
 
     The id is the database id, used for logging.
 
     Returns None in case of an error.
     """
     try:
-        priv_pem = priv_pem.encode("ascii")
-        priv = load_pem_private_key(priv_pem, password=None)
-        pub = priv.public_key()
-        pub = pub.public_bytes(Encoding.PEM, PublicFormat.SubjectPublicKeyInfo)
-        pub = pub.decode("ascii")
-        return pub
+        priv = priv_pem.encode("ascii")
+        priv = load_pem_private_key(priv, password=None)
+        return priv.public_key()
 
     except Exception as e:
         # Make sure we don't log the private key.
