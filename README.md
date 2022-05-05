@@ -15,7 +15,7 @@ Running:
 
     cd src
     pip install -r requirements.txt
-    python manage.py makemigrations apikeys signingkeys
+    python manage.py makemigrations apikeys
     python manage.py migrate
     python manage.py createsuperuser  # Fill out the form
     python manage.py runserver

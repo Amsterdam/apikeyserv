@@ -3,7 +3,6 @@ from cryptography.hazmat.primitives.serialization import (
     PublicFormat,
     load_pem_private_key,
 )
-from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from io import StringIO
 import logging
