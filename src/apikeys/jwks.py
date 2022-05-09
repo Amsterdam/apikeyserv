@@ -13,5 +13,5 @@ def jwk(key: Ed25519PublicKey) -> Dict[str, object]:
     return {
         "kty": "OKP",
         "crv": "Ed25519",
-        "x": base64.urlsafe_b64encode(raw).decode("ascii"),
+        "x": base64.urlsafe_b64encode(raw).rstrip(b"=").decode("ascii"),
     }

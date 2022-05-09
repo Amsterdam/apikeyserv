@@ -3,5 +3,6 @@ backports.zoneinfo==0.2.1
 cffi==1.15.0
 Django==4.0.4
 pycparser==2.21
+pytest-django==7.1.2
 PyJWT[crypto]==2.3.0
 sqlparse==0.4.2
