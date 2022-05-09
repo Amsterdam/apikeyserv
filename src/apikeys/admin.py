@@ -40,14 +40,9 @@ class SigningKeyAdmin(admin.ModelAdmin):
 
     def public_key(self, obj):
         try:
-            pubkey = public_key(obj.private, obj.id)
+            return public_key(obj.private, obj.id)
         except Exception as e:
             return "INVALID"
-
-        pubkey = pubkey.strip()
-        pubkey = pubkey.lstrip("-----BEGIN PUBLIC KEY-----")
-        pubkey = pubkey.rstrip("-----END PUBLIC KEY-----")
-        return pubkey
 
 
 admin.site.register(ApiKey, ApiKeyAdmin)
