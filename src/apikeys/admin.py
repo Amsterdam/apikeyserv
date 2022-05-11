@@ -4,6 +4,7 @@ from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 
+from .display import base64_public_key
 from .models import ApiKey, SigningKey, get_signing_key
 from .views import public_key
 
@@ -15,7 +16,7 @@ class ApiKeyAdmin(admin.ModelAdmin):
         """API key with currently active signing key."""
         try:
             sign_key = get_signing_key()
-        except Exception as e:
+        except Exception:
             return ""
 
         payload = {"sub": obj.id}
@@ -39,10 +40,14 @@ class SigningKeyAdmin(admin.ModelAdmin):
     list_display = ("id", "active", "created", "public_key")
 
     def public_key(self, obj):
+        """Displays the public key in base64, as JWK would."""
         try:
-            return public_key(obj.private, obj.id)
-        except Exception as e:
+            key = public_key(obj.private, obj.id)
+        except Exception:
+            # Don't do anything that might log the private key.
             return "INVALID"
+
+        return base64_public_key(key)
 
 
 admin.site.register(ApiKey, ApiKeyAdmin)

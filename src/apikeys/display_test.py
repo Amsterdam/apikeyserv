@@ -1,7 +1,7 @@
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 import jwt
 
-from .jwks import jwk
+from .display import jwk
 
 
 def test_jwk():

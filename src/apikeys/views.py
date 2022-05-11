@@ -6,7 +6,7 @@ from django.http import HttpResponse
 import logging
 from typing import Optional
 
-from .jwks import jwk
+from .display import jwk
 from .models import SigningKey
 
 
@@ -31,7 +31,9 @@ def index(request):
 
 
 def public_key(priv_pem: str, id: int) -> Optional[Ed25519PublicKey]:
-    """Returns the public key  for the private key priv_pem, which is in PEM format.
+    """Returns the public key  for the private key priv_pem.
+
+    The private key must be in PEM format.
 
     The id is the database id, used for logging.
 
@@ -44,5 +46,6 @@ def public_key(priv_pem: str, id: int) -> Optional[Ed25519PublicKey]:
 
     except Exception as e:
         # Make sure we don't log the private key.
-        logger.error("%s while generating public key for %d", type(e).__name__, id)
+        typename = type(e).__name__
+        logger.error("%s while generating public key for %d", typename, id)
         return None
