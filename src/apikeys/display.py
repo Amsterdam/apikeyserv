@@ -4,7 +4,13 @@ import base64
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
-from typing import Dict
+from typing import Dict, Iterable, List
+
+
+def base64_public_key(key: Ed25519PublicKey):
+    """Format a public key in base64, as required for JWK."""
+    raw = key.public_bytes(Encoding.Raw, PublicFormat.Raw)
+    return base64.urlsafe_b64encode(raw).rstrip(b"=").decode("ascii")
 
 
 def jwk(key: Ed25519PublicKey) -> Dict[str, object]:
@@ -17,6 +23,7 @@ def jwk(key: Ed25519PublicKey) -> Dict[str, object]:
     }
 
 
-def base64_public_key(key: Ed25519PublicKey):
-    raw = key.public_bytes(Encoding.Raw, PublicFormat.Raw)
-    return base64.urlsafe_b64encode(raw).rstrip(b"=").decode("ascii")
+def jwks(keys: Iterable[Ed25519PublicKey]) -> Dict[str, object]:
+    return {
+        "keys": [jwk(key) for key in keys],
+    }

@@ -32,6 +32,19 @@ output through a management command:
     openssl genpkey -algorithm ED25519 -outform PEM |
         python manage.py addsigningkey /dev/stdin
 
+apikeyserv can manage multiple signing keys to allow for key rotation.
+Keys can be retired by unchecking their "active" flag.
+
+Client services should check API keys against the public key(s) managed by
+apikeyserv using PyJWT or another JWT library. They should periodically grab
+the currently active keyset from apikeyserv's /signingkeys/ path, which serves
+the active keys as a JSON Web Key Set (JWKS):
+
+    >>> import jwt
+    >>> from urllib.request import urlopen
+    >>> response = urlopen("http://localhost:8000/signingkeys")
+    >>> jwt.PyJWKSet.from_json(response.read())
+
 
 Security and privacy
 ====================

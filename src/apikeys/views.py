@@ -6,7 +6,7 @@ from django.http import HttpResponse
 import logging
 from typing import Optional
 
-from .display import jwk
+from .display import jwks
 from .models import SigningKey
 
 
@@ -24,10 +24,10 @@ def index(request):
         if pub is None:
             continue
 
-        keyset.append(jwk(pub))
+        keyset.append(pub)
 
-    jwks = {"keys": keyset}
-    return HttpResponse(json.dumps(jwks), content_type="application/json")
+    j = json.dumps(jwks(keyset))
+    return HttpResponse(j, content_type="application/json")
 
 
 def public_key(priv_pem: str, id: int) -> Optional[Ed25519PublicKey]:

@@ -1,7 +1,10 @@
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+    Ed25519PublicKey,
+    Ed25519PrivateKey,
+)
 import jwt
 
-from .display import jwk
+from .display import jwk, jwks
 
 
 def test_jwk():
@@ -19,3 +22,8 @@ def test_jwk():
     }
 
     jwt.PyJWK(j)  # Shouldn't raise.
+
+
+def test_jwks():
+    keys = [Ed25519PrivateKey.generate().public_key() for i in range(5)]
+    jwt.PyJWKSet(jwks(keys)["keys"])  # Shouldn't raise.
