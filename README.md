@@ -16,6 +16,8 @@ the API key and one in the Authorization header.)
 
 Running:
 
+    **On the host**
+
     cd src
     pip install -r requirements.txt
     python manage.py makemigrations apikeys
@@ -24,6 +26,12 @@ Running:
     python manage.py runserver
     # Generate a signing key:
     openssl genpkey -algorithm ED25519 -outform PEM
+
+    **In docker**
+
+    docker-compose up
+    docker-compose exec web bash
+    (same management commands as running on the host)
 
 Now visit `http://localhost:8000/admin/` to add this signing key and start
 adding API keys. Alternatively, a key can be added by piping the last command's
@@ -43,7 +51,10 @@ the active keys as a JSON Web Key Set (JWKS):
     >>> import jwt
     >>> from urllib.request import urlopen
     >>> response = urlopen("http://localhost:8000/signingkeys")
-    >>> jwt.PyJWKSet.from_json(response.read())
+    >>> jwks = jwt.PyJWKSet.from_json(response.read())
+    >>> pub_key = jwks.keys[0].key # In this case we assume it is signed with the first key
+    >>> encoded_jwt = "xxxx.yyyy.zzzz"
+    >>> jwt.decode(encoded_jwt, pub_key, algorithms="EdDSA")
 
 
 Security and privacy
