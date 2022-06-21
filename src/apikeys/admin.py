@@ -18,7 +18,6 @@ class ApiKeyAdmin(admin.ModelAdmin):
         except Exception:
             return ""
 
-
 class SigningKeyAdminForm(forms.ModelForm):
     def clean_private(self):
         priv_pem = self.cleaned_data["private"]

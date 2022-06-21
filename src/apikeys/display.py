@@ -7,7 +7,7 @@ from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 from typing import Dict, Iterable
 
 
-def base64_public_key(key: Ed25519PublicKey):
+def base64_public_key(key: Ed25519PublicKey) -> str:
     """Format a public key in base64, as required for JWK."""
     raw = key.public_bytes(Encoding.Raw, PublicFormat.Raw)
     return base64.urlsafe_b64encode(raw).rstrip(b"=").decode("ascii")

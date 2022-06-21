@@ -11,11 +11,13 @@ FROM amsterdam/python:3.9-slim-buster
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
 COPY --from=builder /usr/local/lib/python3.9/site-packages/ /usr/local/lib/python3.9/site-packages/
 
+RUN mkdir /static && chown datapunt:datapunt /static
 WORKDIR /app
 COPY . ./
-RUN python manage.py makemigrations apikeys && python manage.py migrate
 
 ENV DJANGO_SETTINGS_MODULE=apikeyserv.settings
+
+RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 USER datapunt
