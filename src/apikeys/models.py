@@ -1,5 +1,7 @@
 import os
 
+import jwt
+
 from django.db import models
 
 
@@ -34,6 +36,7 @@ class ApiKey(models.Model):
 
 class SigningKey(models.Model):
     """A signing key pair."""
+
     # The private key, in PEM+PKCS#8 format.
     private = models.TextField(null=False)
 
@@ -48,3 +51,11 @@ def get_signing_key() -> str:
     The current signing key is the newest key that is marked active.
     """
     return SigningKey.objects.filter(active=True).order_by("-created").first().private
+
+
+def sign(obj: ApiKey) -> str:
+    sign_key = get_signing_key()
+    payload = {"sub": obj.id}
+    if obj.expires is not None:
+        payload["exp"] = obj.expires
+    return jwt.encode(payload, sign_key, algorithm="EdDSA")

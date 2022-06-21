@@ -4,7 +4,7 @@ import base64
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable
 
 
 def base64_public_key(key: Ed25519PublicKey):

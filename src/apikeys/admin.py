@@ -1,11 +1,10 @@
-import jwt
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 
 from .display import base64_public_key
-from .models import ApiKey, SigningKey, get_signing_key
+from .models import ApiKey, SigningKey, sign
 from .views import public_key
 
 
@@ -15,14 +14,9 @@ class ApiKeyAdmin(admin.ModelAdmin):
     def api_key(self, obj):
         """API key with currently active signing key."""
         try:
-            sign_key = get_signing_key()
+            return sign(obj)
         except Exception:
             return ""
-
-        payload = {"sub": obj.id}
-        if obj.expires is not None:
-            payload["exp"] = obj.expires
-        return jwt.encode({"sub": obj.id}, sign_key)
 
 
 class SigningKeyAdminForm(forms.ModelForm):
