@@ -12,26 +12,37 @@ use existing libraries for decoding them and verifying them against this
 service's public key.
 
 
-Running:
+Setup and running
+=================
 
-    **On the host**
+The easy option:
+
+    docker-compose up
+
+For local development, only start the database,
+then point to it in the environment and install dependencies:
+
+    docker-compose up -d database
+    export DATABASE_HOST=localhost
+    pip install -r src/requirements.txt
+
+For the first run, set up a user account and:
+Then issue the following commands to install and start the service:
+
+    # docker-compose only
+    docker-compose exec web bash
 
     cd src
-    pip install -r requirements.txt
     python manage.py makemigrations apikeys
     python manage.py migrate
     python manage.py createsuperuser  # Fill out the form
     python manage.py runserver
-    # Generate a signing key:
+
+Now generate a signing key:
+
     openssl genpkey -algorithm ED25519 -outform PEM
 
-    **In docker**
-
-    docker-compose up
-    docker-compose exec web bash
-    (same management commands as running on the host)
-
-Now visit `http://localhost:8000/admin/` to add this signing key and start
+Visit `http://localhost:8000/admin/` to add this signing key and start
 adding API keys. Alternatively, a key can be added by piping the last command's
 output through a management command:
 
@@ -40,6 +51,10 @@ output through a management command:
 
 apikeyserv can manage multiple signing keys to allow for key rotation.
 Keys can be retired by unchecking their "active" flag.
+
+
+Client services
+===============
 
 Client services should check API keys against the public key(s) managed by
 apikeyserv using PyJWT or another JWT library. They should periodically grab

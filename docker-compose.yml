@@ -6,7 +6,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: "database"
+      DATABASE_HOST: "database"
       UWSGI_HTTP_SOCKET: ":8000"
       UWSGI_MODULE: "apikeyserv.wsgi"
       UWSGI_CALLABLE: "application"
@@ -19,6 +19,8 @@ services:
       - database
   database:
     image: amsterdam/postgres
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: "insecure"
     volumes:

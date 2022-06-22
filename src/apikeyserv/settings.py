@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': env.get('DATABASE_NAME', 'apikeyserv'),
         'USER': env.get('DATABASE_USER', 'apikeyserv'),
         'PASSWORD': env.get('DATABASE_PASSWORD', 'insecure'),
-        'HOST': env.get('DATABASE_URL', 'database'),
+        'HOST': env.get('DATABASE_HOST', 'database'),
         'PORT': env.get('DATABASE_PORT', 5432),
     }
 }
