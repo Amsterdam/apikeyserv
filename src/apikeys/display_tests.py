@@ -17,6 +17,7 @@ def test_jwk():
     j = jwk(pub)
     assert j == {
         "kty": "OKP",
+        "alg": "EdDSA",
         "crv": "Ed25519",
         "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
     }

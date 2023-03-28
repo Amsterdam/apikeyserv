@@ -18,6 +18,7 @@ def jwk(key: Ed25519PublicKey) -> Dict[str, object]:
 
     return {
         "kty": "OKP",
+        "alg": "EdDSA",
         "crv": "Ed25519",
         "x": base64_public_key(key),
     }
