@@ -24,7 +24,7 @@ then point to it in the environment and install dependencies:
 
     docker-compose up -d database
     export DATABASE_HOST=localhost
-    pip install -r src/requirements.txt
+    pip install -r server/requirements.txt
 
 For the first run, set up a user account and:
 Then issue the following commands to install and start the service:
@@ -32,7 +32,7 @@ Then issue the following commands to install and start the service:
     # docker-compose only
     docker-compose exec web bash
 
-    cd src
+    cd server
     python manage.py makemigrations apikeys
     python manage.py migrate
     python manage.py createsuperuser  # Fill out the form

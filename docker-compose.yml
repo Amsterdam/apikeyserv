@@ -2,7 +2,7 @@
 version: "3.3"
 services:
   web:
-    build: src
+    build: server
     ports:
       - "8000:8000"
     environment:
@@ -14,7 +14,7 @@ services:
       UWSGI_STATIC_MAP: "/apikeyserv/static=/static"
       UWSGI_PY_AUTORELOAD: 1
     volumes:
-      - ./src:/app
+      - ./server:/app
     links:
       - database
   database:
