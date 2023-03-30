@@ -13,6 +13,20 @@ logger = logging.getLogger(__name__)
 
 
 class ApiKeyMiddleware:
+    """Django middleware that check API keys in the X-Api-Key header.
+
+    This middleware launches a daemon thread that periodically connects to
+    the API key server to fetch the public signing keys. That means it can
+    check API keys without connectivity to the API key server.
+
+    Needs two settings:
+    * APIKEY_ENDPOINT, to fetch signing keys from. Normally the /signingkeys/
+      endpoint from apikeyserv.
+    * APIKEY_MANDATORY, boolean that indicates whether API keys are required.
+      If set to False, API keys are checked only when they are present, while
+      requests without a key are still allowed.
+    """
+
     def __init__(self, get_response, mandatory: bool):
         self._client = Client(settings.APIKEY_ENDPOINT)
         self._get_response = get_response
