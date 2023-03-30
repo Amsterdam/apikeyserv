@@ -56,18 +56,10 @@ Keys can be retired by unchecking their "active" flag.
 Client services
 ===============
 
-Client services should check API keys against the public key(s) managed by
-apikeyserv using PyJWT or another JWT library. They should periodically grab
-the currently active keyset from apikeyserv's /signingkeys/ path, which serves
-the active keys as a JSON Web Key Set (JWKS):
+This repository contains a client library for talking to apikeyserv.
+Install it with:
 
-    >>> import jwt
-    >>> from urllib.request import urlopen
-    >>> response = urlopen("http://localhost:8000/signingkeys")
-    >>> jwks = jwt.PyJWKSet.from_json(response.read())
-    >>> pub_key = jwks.keys[0].key # In this case we assume it is signed with the first key
-    >>> encoded_jwt = "xxxx.yyyy.zzzz"
-    >>> jwt.decode(encoded_jwt, pub_key, algorithms="EdDSA")
+    pip install 'git+https://github.com/Amsterdam/apikeyserv.git#subdirectory=apikeyclient'
 
 
 Security and privacy
