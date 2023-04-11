@@ -13,6 +13,15 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from os import environ as env
 from pathlib import Path
 
+
+def get_path_variable(env_var, default=""):
+    """Utility function to get a secret from the filesystem."""
+    path = env.get(env_var)
+    if path is None:
+        return default
+    return Path(path).read_text()
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-24s!+ld=i&0^036%yc1ck9#2%npsbdsuxg-v*2xapjb$u0#4c^'
+SECRET_KEY = get_path_variable("SECRET_KEY_PATH", env.get('SECRET_KEY', 'insecure'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,7 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': env.get('DATABASE_NAME', 'apikeyserv'),
         'USER': env.get('DATABASE_USER', 'apikeyserv'),
-        'PASSWORD': env.get('DATABASE_PASSWORD', 'insecure'),
+        'PASSWORD': get_path_variable("AZ_PG_TOKEN_PATH", env.get('DATABASE_PASSWORD', 'insecure')),
         'HOST': env.get('DATABASE_HOST', 'database'),
         'PORT': env.get('DATABASE_PORT', 5432),
     }
