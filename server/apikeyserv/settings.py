@@ -94,6 +94,15 @@ DATABASES = {
     }
 }
 
+
+# Health checks configured for django-healthchecks
+HEALTH_CHECKS = {
+    "app": lambda request: True,
+    "database": "django_healthchecks.contrib.check_database",
+}
+
+HEALTH_CHECKS_ERROR_CODE = 503
+
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
