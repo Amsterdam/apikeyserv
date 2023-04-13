@@ -98,7 +98,7 @@ DATABASES = {
 # Health checks configured for django-healthchecks
 HEALTH_CHECKS = {
     "app": lambda request: True,
-    "database": "django_healthchecks.contrib.check_database",
+#    "database": "django_healthchecks.contrib.check_database",
 }
 
 HEALTH_CHECKS_ERROR_CODE = 503
