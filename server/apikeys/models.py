@@ -6,8 +6,10 @@ from django.db import models
 
 
 def secure_random():
-    """Returns a cryptographically secure random 64-bit integer."""
-    return int.from_bytes(os.urandom(8), byteorder="little")
+    """Returns a cryptographically secure random 63-bit integer."""
+    r = int.from_bytes(os.urandom(8), byteorder="little")
+    # Drop one bit to please PostgreSQL.
+    return r >> 1
 
 
 class ApiKey(models.Model):
@@ -50,7 +52,8 @@ def get_signing_key() -> str:
 
     The current signing key is the newest key that is marked active.
     """
-    return SigningKey.objects.filter(active=True).order_by("-created").first().private
+    keys = SigningKey.objects.filter(active=True).order_by("-created")
+    return keys.first().private
 
 
 def sign(obj: ApiKey) -> str:

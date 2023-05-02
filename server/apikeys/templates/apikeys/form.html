@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <title>Aanvraag API-sleutel Datadiensten / Request API key Data Services</title>
+  </head>
+
+  <body>
+    <p>Nieuwe sleutel aanvragen / Request new key:</p>
+    <form action="/" method="post">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="Indienen / Submit" />
+    </form>
+  </body>
+</html>
