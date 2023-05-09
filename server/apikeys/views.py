@@ -61,11 +61,12 @@ def request_new_key(request):
         logger.info("New key request")
 
         if form.is_valid():
-            name = form.cleaned_data["name"]
+            org = form.cleaned_data["organisation"]
             email = form.cleaned_data["email"]
-            new_key = ApiKey(name=name, email=email)
+            reason = form.cleaned_data["reason"]
+            new_key = ApiKey(organisation=org, email=email, reason=reason)
             new_key.save()
-            logger.info("Key created for %s, %s", name, email)
+            logger.info("Key created for %s, %s", org, email)
             return HttpResponseRedirect("/created/")
     else:
         form = RequestForm()

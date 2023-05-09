@@ -7,7 +7,7 @@
     <p>Nieuwe sleutel aanvragen / Request new key:</p>
     <form action="/" method="post">
       {% csrf_token %}
-      {{ form }}
+      {{ form.as_p }}
       <input type="submit" value="Indienen / Submit" />
     </form>
   </body>

@@ -24,16 +24,21 @@ class ApiKey(models.Model):
     # Making this the primary key ensures uniqueness.
     id = models.BigIntegerField(default=secure_random, primary_key=True)
 
-    # Human-readable name of this key's owner.
-    name = models.CharField(max_length=256, null=False)
+    # Human-readable name of this key's owning organisation.
+    organisation = models.CharField(max_length=256, null=False)
 
     email = models.CharField(max_length=256, null=False)
+
+    # Reason for requesting key (application name, ...).
+    reason = models.CharField(max_length=512, default="", null=False)
 
     created = models.DateTimeField(auto_now_add=True, null=False)
 
     modified = models.DateTimeField(auto_now=True, null=False)
 
     expires = models.DateTimeField(blank=True, null=True)
+
+    sent = models.BooleanField(default=False, null=False)
 
 
 class SigningKey(models.Model):
