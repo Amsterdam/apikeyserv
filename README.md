@@ -33,6 +33,7 @@ Then issue the following commands to install and start the service:
     docker-compose exec web bash
 
     cd server
+    pytest .
     python manage.py makemigrations apikeys
     python manage.py migrate
     python manage.py createsuperuser  # Fill out the form
