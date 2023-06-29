@@ -27,7 +27,7 @@ class ApiKeyMiddleware:
       requests without a key are still allowed.
     """
 
-    def __init__(self, get_response, mandatory: bool):
+    def __init__(self, get_response):
         self._client = Client(settings.APIKEY_ENDPOINT)
         self._get_response = get_response
         self._mandatory = bool(settings.APIKEY_MANDATORY)

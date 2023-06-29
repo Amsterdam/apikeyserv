@@ -17,8 +17,19 @@ services:
       - ./server:/app
     links:
       - database
+  client:
+    build: client
+    ports:
+      - "8002:8000"
+      - "4444:4444"
+    environment:
+      APIKEY_ENDPOINT: "http://web:8000/signingkeys"
+      APIKEY_MANDATORY: 0
+      REMOTE_PDB_HOST: 127.0.0.1 
+      REMOTE_PDB_PORT: 4444 
+    # command: ["sleep", "infinity"]
   database:
-    image: amsterdam/postgres
+    image: postgres:12.15
     ports:
       - "5432:5432"
     environment:
