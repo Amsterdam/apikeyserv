@@ -19,7 +19,7 @@ The easy option:
 
     docker-compose up
 
-For local development, only start the database,
+For local development, create a virtualenv, only start the database container
 then point to it in the environment and install dependencies:
 
     docker-compose up -d database
@@ -32,12 +32,12 @@ Then issue the following commands to install and start the service:
     # docker-compose only
     docker-compose exec web bash
 
-    cd server
+    cd server  # if not inside web image
     pytest .
     python manage.py makemigrations apikeys
     python manage.py migrate
     python manage.py createsuperuser  # Fill out the form
-    python manage.py runserver
+    python manage.py runserver  # if not inside web image
 
 Now generate a signing key:
 
@@ -81,5 +81,18 @@ and applications that consume them, not to provide security.
 For secure key distribution to consuming applications,
 such applications should use a TLS connection to the service.
 
+Local testclient
+================
 
-Copyright 2022 Gemeente Amsterdam. All rights reserved.
+A bare-bones Django client has been added tot test the Django middleware
+locally. Assuming that a virtualenv has been created and activated:
+
+    cd client
+    pip install -r requirements.txt
+    python __init__.py runserver localhost:nnnn  # port not conflicting with api key server
+
+The Django settings variables `APIKEY_ENDPOINT` and `APIKEY_MANDATORY` (0 or 1)
+that are needed for the middleware component can be configured as environment variables.
+
+
+Copyright 2023 Gemeente Amsterdam. All rights reserved.

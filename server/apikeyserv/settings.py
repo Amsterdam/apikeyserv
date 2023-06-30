@@ -22,6 +22,10 @@ def get_path_variable(env_var, default=""):
     return Path(path).read_text()
 
 
+def str2bool(v):
+    return v.lower() in ("yes", "true", "t", "1")
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,9 +37,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = get_path_variable("SECRET_KEY_PATH", env.get('SECRET_KEY', 'insecure'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = str2bool(env.get("DJANGO_DEBUG", 'false'))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
