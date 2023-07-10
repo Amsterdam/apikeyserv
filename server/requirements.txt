@@ -1,6 +1,6 @@
 asgiref==3.6.0
 cffi==1.15.0
-Django==4.2.1
+Django==4.2.3
 django-healthchecks==1.5.0
 psycopg2-binary==2.9.6
 pycparser==2.21
