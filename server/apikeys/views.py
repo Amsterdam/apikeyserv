@@ -4,7 +4,8 @@ from typing import Optional
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
-from django.http import HttpResponse, HttpResponseRedirect
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 
@@ -31,6 +32,16 @@ def index(request):
 
     j = json.dumps(jwks(keyset))
     return HttpResponse(j, content_type="application/json")
+
+
+def api_keys(request):
+    """ Stub for REST API, not sure if needed."""
+    if request.method == "GET":
+        # We do not want to expose the keys
+        raise PermissionDenied()
+    elif request.method == "POST":
+        # do validations and add a key
+        return JsonResponse({"status": "ok"})
 
 
 def public_key(priv_pem: str, id: int) -> Optional[Ed25519PublicKey]:
