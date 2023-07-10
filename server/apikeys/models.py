@@ -27,6 +27,7 @@ class ApiKey(models.Model):
     # Human-readable name of this key's owning organisation.
     organisation = models.CharField(max_length=256, null=False)
 
+    # XXX We need to add an e-mail validator here.
     email = models.CharField(max_length=256, null=False)
 
     # Reason for requesting key (application name, ...).

@@ -111,3 +111,5 @@ ENV/
 
 # Project specific
 .DS_Store
+
+/server/static
