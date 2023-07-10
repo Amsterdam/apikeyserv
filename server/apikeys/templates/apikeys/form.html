@@ -1,14 +1,21 @@
 <html>
   <head>
     <title>Aanvraag API-sleutel Datadiensten / Request API key Data Services</title>
+    <link rel="stylesheet" 
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
   </head>
 
   <body>
-    <p>Nieuwe sleutel aanvragen / Request new key:</p>
-    <form action="/" method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="Indienen / Submit" />
-    </form>
+    <div class="container">
+        <h3>Nieuwe sleutel aanvragen / Request new key:</h3>
+        <form action="/" method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <input type="submit" value="Indienen / Submit" />
+        </form>
+    </div>
   </body>
 </html>
+
+
+
