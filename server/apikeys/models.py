@@ -1,4 +1,6 @@
+import json
 import os
+from django.forms import model_to_dict
 
 import jwt
 
@@ -40,6 +42,12 @@ class ApiKey(models.Model):
     expires = models.DateTimeField(blank=True, null=True)
 
     sent = models.BooleanField(default=False, null=False)
+
+    def as_json(self):
+        """Returns the apikey fields as json."""
+        api_key_dict = model_to_dict(self)
+        api_key_dict["apikey"] = sign(self)
+        return api_key_dict
 
 
 class SigningKey(models.Model):

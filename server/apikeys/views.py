@@ -4,14 +4,15 @@ from typing import Optional
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import BadRequest, PermissionDenied
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 
 from .display import jwks
 from .forms import RequestForm
-from .models import ApiKey, SigningKey
+from .models import ApiKey, SigningKey, sign
 
 
 logger = logging.getLogger(__file__)
@@ -34,14 +35,22 @@ def index(request):
     return HttpResponse(j, content_type="application/json")
 
 
+@csrf_exempt
 def api_keys(request):
-    """ Stub for REST API, not sure if needed."""
+    """Stub for REST API, not sure if needed."""
     if request.method == "GET":
         # We do not want to expose the keys
         raise PermissionDenied()
     elif request.method == "POST":
         # do validations and add a key
-        return JsonResponse({"status": "ok"})
+        params = json.loads(request.body)
+        try:
+            new_key = ApiKey(**params)
+        except TypeError:
+            raise BadRequest("Invalid parameters.")
+        new_key.save()
+        logger.info("Key created for %s, %s", params["organisation"], params["email"])
+        return JsonResponse(new_key.as_json())
 
 
 def public_key(priv_pem: str, id: int) -> Optional[Ed25519PublicKey]:
@@ -78,12 +87,8 @@ def request_new_key(request):
             new_key = ApiKey(organisation=org, email=email, reason=reason)
             new_key.save()
             logger.info("Key created for %s, %s", org, email)
-            return HttpResponseRedirect("/created/")
+            return render(request, "apikeys/created.html", {"apikey": sign(new_key)})
     else:
         form = RequestForm()
 
     return render(request, "apikeys/form.html", {"form": form})
-
-
-class CreatedNewKey(TemplateView):
-    template_name = "apikeys/created.html"
