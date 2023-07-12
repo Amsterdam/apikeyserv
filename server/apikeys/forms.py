@@ -1,8 +1,9 @@
 from django import forms
 
+from apikeys.models import ApiKey
 
-class RequestForm(forms.Form):
-    organisation = forms.CharField(max_length=256,
-                                   label="Organisation/application")
-    email = forms.CharField(max_length=256)
-    reason = forms.CharField(max_length=512)
+
+class RequestForm(forms.ModelForm):
+    class Meta:
+        model = ApiKey
+        exclude = ["id", "created", "modified", "expires", "sent"]

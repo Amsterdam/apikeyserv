@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import json
 import os
 from django.forms import model_to_dict
@@ -5,6 +6,10 @@ from django.forms import model_to_dict
 import jwt
 
 from django.db import models
+
+
+def get_expiry_datetime():
+    return datetime.today() + timedelta(days=365)
 
 
 def secure_random():
@@ -25,22 +30,30 @@ class ApiKey(models.Model):
     #
     # Making this the primary key ensures uniqueness.
     id = models.BigIntegerField(default=secure_random, primary_key=True)
-
+    # Name of contactperson 1
+    contactperson_1_name = models.CharField(
+        max_length=256, null=True, blank=True, verbose_name="Contactpersoon"
+    )
+    email_1 = models.EmailField(
+        max_length=256,
+        null=False,
+        blank=False,
+        default="",
+        verbose_name="E-mailadres",
+    )
+    # Name of contactperson 1
+    contactperson_2_name = models.CharField(
+        max_length=256, null=True, blank=True, verbose_name="Tweede contactpersoon"
+    )
+    email_2 = models.EmailField(
+        max_length=256, null=True, blank=True, verbose_name="Tweede e-mailadres"
+    )
     # Human-readable name of this key's owning organisation.
-    organisation = models.CharField(max_length=256, null=False)
-
-    # XXX We need to add an e-mail validator here.
-    email = models.CharField(max_length=256, null=False)
-
-    # Reason for requesting key (application name, ...).
-    reason = models.CharField(max_length=512, default="", null=False)
-
+    organisation = models.CharField(max_length=256, null=False, verbose_name="Organisatie")
+    department = models.CharField(max_length=256, null=True, blank=True, verbose_name="Afdeling")
     created = models.DateTimeField(auto_now_add=True, null=False)
-
     modified = models.DateTimeField(auto_now=True, null=False)
-
-    expires = models.DateTimeField(blank=True, null=True)
-
+    expires = models.DateTimeField(blank=True, null=True, default=get_expiry_datetime)
     sent = models.BooleanField(default=False, null=False)
 
     def as_json(self):

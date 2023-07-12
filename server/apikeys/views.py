@@ -1,14 +1,14 @@
+from http import HTTPStatus
 import json
 import logging
 from typing import Optional
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
-from django.core.exceptions import BadRequest, PermissionDenied
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic.base import TemplateView
 
 from .display import jwks
 from .forms import RequestForm
@@ -43,13 +43,20 @@ def api_keys(request):
         raise PermissionDenied()
     elif request.method == "POST":
         # do validations and add a key
+        if not request.body:
+            return JsonResponse({"message": "No data provided."}, status=HTTPStatus.BAD_REQUEST)
         params = json.loads(request.body)
         try:
+            form = RequestForm(params)
+            if not form.is_valid():
+                return JsonResponse(form.errors, status=HTTPStatus.BAD_REQUEST)
             new_key = ApiKey(**params)
         except TypeError:
-            raise BadRequest("Invalid parameters.")
+            return JsonResponse({"message": "Invalid parameters."}, status=HTTPStatus.BAD_REQUEST)
         new_key.save()
-        logger.info("Key created for %s, %s", params["organisation"], params["email"])
+        logger.info(
+            "Key created for %s, %s", params.get("organisation", ""), params.get("email_1")
+        )
         return JsonResponse(new_key.as_json())
 
 
@@ -81,12 +88,10 @@ def request_new_key(request):
         logger.info("New key request")
 
         if form.is_valid():
-            org = form.cleaned_data["organisation"]
-            email = form.cleaned_data["email"]
-            reason = form.cleaned_data["reason"]
-            new_key = ApiKey(organisation=org, email=email, reason=reason)
+            new_key = ApiKey(**form.cleaned_data)
             new_key.save()
-            logger.info("Key created for %s, %s", org, email)
+            data = form.cleaned_data
+            logger.info("Key created for %s, %s", data["organisation"], data["email_1"])
             return render(request, "apikeys/created.html", {"apikey": sign(new_key)})
     else:
         form = RequestForm()

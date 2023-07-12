@@ -9,7 +9,7 @@ from .views import public_key
 
 
 class ApiKeyAdmin(admin.ModelAdmin):
-    list_display = ("id", "email", "created", "modified", "api_key")
+    list_display = ("id", "email_1", "created", "modified", "api_key")
 
     def api_key(self, obj):
         """API key with currently active signing key."""
