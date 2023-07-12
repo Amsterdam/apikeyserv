@@ -37,7 +37,7 @@ def index(request):
 
 @csrf_exempt
 def api_keys(request):
-    """Stub for REST API, not sure if needed."""
+    """API endpoint for requesting new api keys."""
     if request.method == "GET":
         # We do not want to expose the keys
         raise PermissionDenied()

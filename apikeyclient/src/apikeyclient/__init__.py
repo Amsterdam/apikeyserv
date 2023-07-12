@@ -27,10 +27,14 @@ class ApiKeyMiddleware:
     * APIKEY_MANDATORY, boolean that indicates whether API keys are required.
       If set to False, API keys are checked only when they are present, while
       requests without a key are still allowed.
+    * APIKEY_LOCALKEYS, serialized json string with signing keys.
+      If this setting is provided, keys will *not* be collected from APIKEY_ENDPOINT.
+      Using this setting is only meant as a fallback mechanism, because deactivating
+      a key needs a redeploy of the app that is using this middleware!
     """
 
     def __init__(self, get_response):
-        self._client = Client(settings.APIKEY_ENDPOINT)
+        self._client = self._fetch_client()
         self._get_response = get_response
         self._mandatory = bool(settings.APIKEY_MANDATORY)
 
@@ -44,6 +48,23 @@ class ApiKeyMiddleware:
                 return HttpResponse("invalid API key", status=402)
         return self._get_response(request)
 
+    def _fetch_client(self):
+        if settings.APIKEY_LOCALKEYS is not None:
+            keyset = jwt.PyJWKSet(settings.APIKEY_LOCALKEYS)
+            return LocalKeysClient([k.key for k in keyset.keys])
+        else:
+            return Client(settings.APIKEY_ENDPOINT)
+
+
+def check_token(token, keys):
+    """ Checks a token against list of signing keys."""
+    for key in keys:
+        try:
+            dec = jwt.decode(token, key, algorithms="EdDSA")
+            return dec["sub"]
+        except (jwt.InvalidSignatureError, jwt.DecodeError):
+            continue
+    raise ValueError("API key not valid with any signing key")
 
 class Client:
     _lock: threading.Lock
@@ -58,7 +79,7 @@ class Client:
 
         self._keys = self._fetch_keys()
 
-        # If no keys are found we keep checking with a short _interval
+        # If no keys can be fetched we keep checking with a shorter _interval
         # until keys are found. 
         if self._keys is None:
             self._interval = 5
@@ -71,19 +92,15 @@ class Client:
         with self._lock:
             keys = self._keys
         keys = keys or []
-
-        for key in keys:
-            try:
-                dec = jwt.decode(token, key, algorithms="EdDSA")
-                return dec["sub"]
-            except (jwt.InvalidSignatureError, jwt.DecodeError):
-                continue
-        raise ValueError("API key not valid with any signing key")
+        return check_token(token, keys)
 
     def _fetch_keys(self):
         try:
-            resp = requests.get(self._url).json()
-            keyset = jwt.PyJWKSet(resp["keys"])
+            # Add timeout too avoid blocking this thread for too long.
+            resp = requests.get(self._url, timeout=5)
+            resp.raise_for_status()
+            resp_json = resp.json()
+            keyset = jwt.PyJWKSet(resp_json["keys"])
             return [k.key for k in keyset.keys]
         except Exception as e:
             logger.error("could not fetch JWKS from %s: %s", self._url, e)
@@ -103,3 +120,12 @@ class Client:
             with self._lock:
                 self._interval = KEY_FETCH_INTERVAL
                 self._keys = new_keys
+
+
+class LocalKeysClient:
+
+    def __init__(self, keys):
+        self._keys = keys
+
+    def check(self, token):
+        return check_token(token, self._keys)

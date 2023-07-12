@@ -68,9 +68,7 @@ class SigningKey(models.Model):
 
     # The private key, in PEM+PKCS#8 format.
     private = models.TextField(null=False)
-
     active = models.BooleanField(default=True, null=False)
-
     created = models.DateTimeField(auto_now_add=True, null=False)
 
 
