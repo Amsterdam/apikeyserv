@@ -68,7 +68,7 @@ class Client:
             try:
                 dec = jwt.decode(token, key, algorithms="EdDSA")
                 return dec["sub"]
-            except jwt.InvalidSignatureError:
+            except (jwt.InvalidSignatureError, jwt.DecodeError):
                 continue
         raise ValueError("API key not valid with any signing key")
 
