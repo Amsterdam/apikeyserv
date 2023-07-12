@@ -11,6 +11,8 @@ import requests
 
 logger = logging.getLogger(__name__)
 
+KEY_FETCH_INTERVAL = 3600  # in seconds
+
 
 class ApiKeyMiddleware:
     """Django middleware that check API keys in the X-Api-Key header.
@@ -51,9 +53,15 @@ class Client:
     def __init__(self, url: str):
         self._lock = threading.Lock()
         self._start = datetime.now()
+        self._interval = KEY_FETCH_INTERVAL
         self._url = url
 
         self._keys = self._fetch_keys()
+
+        # If no keys are found we keep checking with a short _interval
+        # until keys are found. 
+        if self._keys is None:
+            self._interval = 5
 
         thr = threading.Thread(target=self._fetch_loop, daemon=True)
         thr.start()
@@ -84,7 +92,7 @@ class Client:
     def _fetch_loop(self):
         t = self._start
         while True:
-            t += timedelta(seconds=3600)
+            t += timedelta(seconds=self._interval)
             pause.until(t)
 
             new_keys = self._fetch_keys()
@@ -93,4 +101,5 @@ class Client:
                 # We've already logged the error.
                 continue
             with self._lock:
+                self._interval = KEY_FETCH_INTERVAL
                 self._keys = new_keys
