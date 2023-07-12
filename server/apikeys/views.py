@@ -50,6 +50,7 @@ def api_keys(request):
             form = RequestForm(params)
             if not form.is_valid():
                 return JsonResponse(form.errors, status=HTTPStatus.BAD_REQUEST)
+            del params["agree_on_personal_data"]
             new_key = ApiKey(**params)
         except TypeError:
             return JsonResponse({"message": "Invalid parameters."}, status=HTTPStatus.BAD_REQUEST)
@@ -88,7 +89,9 @@ def request_new_key(request):
         logger.info("New key request")
 
         if form.is_valid():
-            new_key = ApiKey(**form.cleaned_data)
+            params = form.cleaned_data
+            del params["agree_on_personal_data"]
+            new_key = ApiKey(**params)
             new_key.save()
             data = form.cleaned_data
             logger.info("Key created for %s, %s", data["organisation"], data["email_1"])
