@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta
+from http import HTTPStatus
 import logging
 import threading
 
 from django.conf import settings
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 import jwt
 import pause
 import requests
@@ -41,11 +42,11 @@ class ApiKeyMiddleware:
     def __call__(self, request: HttpRequest):
         token = request.headers.get("X-Api-Key")
         if token is None and self._mandatory:
-            return HttpResponse("API key missing", status=401)
+            return JsonResponse({"message": "API key missing"}, status=HTTPStatus.UNAUTHORIZED)
         if token is not None:
             who = self._client.check(token)
             if who is None:
-                return HttpResponse("invalid API key", status=402)
+                return JsonResponse({"message": "invalid API key"}, status=HTTPStatus.BAD_REQUEST)
         return self._get_response(request)
 
     def _fetch_client(self):
@@ -64,7 +65,8 @@ def check_token(token, keys):
             return dec["sub"]
         except (jwt.InvalidSignatureError, jwt.DecodeError):
             continue
-    raise ValueError("API key not valid with any signing key")
+    logger.error("API key not valid with any signing key")
+    return None
 
 class Client:
     _lock: threading.Lock
