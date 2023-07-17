@@ -51,12 +51,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "corsheaders",
     "apikeys.apps.ApikeysConfig",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -151,3 +153,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # To run on a subpath, we need to define this variable.
 FORCE_SCRIPT_NAME = env.get('FORCE_SCRIPT_NAME')
+
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://(\w|\.)+\.amsterdam\.nl$",
+]
