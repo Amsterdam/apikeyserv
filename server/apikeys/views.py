@@ -38,6 +38,8 @@ def index(request):
 @csrf_exempt
 def api_keys(request):
     """API endpoint for requesting new api keys."""
+    if request.method == "OPTIONS":
+        return HttpResponse(status=204)
     if request.method == "GET":
         # We do not want to expose the keys
         raise PermissionDenied()
