@@ -26,8 +26,8 @@ then point to it in the environment and install dependencies:
     export DATABASE_HOST=localhost
     pip install -r server/requirements.txt
 
-For the first run, set up a user account and:
-Then issue the following commands to install and start the service:
+For the first run, set up a user account and,
+then issue the following commands to install and start the service:
 
     # docker-compose only
     docker-compose exec web bash
@@ -54,11 +54,22 @@ apikeyserv can manage multiple signing keys to allow for key rotation.
 Keys can be retired by unchecking their "active" flag.
 
 
+Deployment
+==========
+
+For deployment the database credentials con be configured in the Django settings.
+The database needs to be initialized with `python manage.py migrate` (from a running container).
+A superuser (to access the `/admin`) can be added with `python manage.py createsuperuser`.
+
 Client services
 ===============
 
 This repository contains a client library for talking to apikeyserv.
 Install it with:
+
+    pip install datadiensten-apikeyclient
+
+or:
 
     pip install 'git+https://github.com/Amsterdam/apikeyserv.git#subdirectory=apikeyclient'
 
