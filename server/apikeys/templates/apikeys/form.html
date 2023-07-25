@@ -7,7 +7,21 @@
 
   <body>
     <div class="container">
+        <h2>Gemeente Amsterdam REST APIs</h2>
         <h3>Nieuwe sleutel aanvragen / Request new key:</h3>
+        <p>
+            Voor het aanvragen van een API key, vragen wij om contactgegevens van u en/of uw organisatie. Wij gebruiken uw
+            contactgegevens om u op de hoogte te stellen van wijzigingen in de API’s, zodat u tijdig eventuele wijzigingen in uw
+            applicaties kunt doorvoeren. <br>
+            De API keys hebben een tijdelijke geldigheidsduur. Na verloop van tijd dient u de geldigheid van uw API te verlengen,
+            waarbij u uw contactgegevens kunt updaten en controleren. U wordt hiervan tijdig op de
+            hoogte gebracht. Voor vragen over de API keys of voor het verwijderen van uw contactgegevens, kunt u ons bereiken op
+            dataplatform@amsterdam.nl. <br> 
+            Uw contactgegevens worden niet langer bewaard dan nodig om over wijzigingen in onze API’s met
+            u te kunnen communiceren. <br>
+            Voor informatie over het verwerken van persoonsgegevens door de Gemeente Amsterdam kunt u terecht op
+            <a href="https://www.amsterdam.nl/privacy/privacyverklaring/">deze pagina</a>.
+        </p>
         <form action="{{ request.path }}" method="post">
           {% csrf_token %}
           {{ form.as_p }}
