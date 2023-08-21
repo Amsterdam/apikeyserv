@@ -32,33 +32,49 @@ class ApiKeyMiddleware:
       If this setting is provided, keys will *not* be collected from APIKEY_ENDPOINT.
       Using this setting is only meant as a fallback mechanism, because deactivating
       a key needs a redeploy of the app that is using this middleware!
+    * APIKEY_LOGGER, the logger that will be used to log the api key request header.
     """
 
     def __init__(self, get_response):
         self._client = self._fetch_client()
         self._get_response = get_response
         self._mandatory = bool(settings.APIKEY_MANDATORY)
+        self._api_key_logger = self._fetch_api_key_logger()
 
     def __call__(self, request: HttpRequest):
         token = request.headers.get("X-Api-Key")
         if token is None and self._mandatory:
             return JsonResponse({"message": "API key missing"}, status=HTTPStatus.UNAUTHORIZED)
         if token is not None:
+            # Log the API KEY, also if it is not valid.
+            self._log_api_key(token)
             who = self._client.check(token)
             if who is None:
                 return JsonResponse({"message": "invalid API key"}, status=HTTPStatus.BAD_REQUEST)
         return self._get_response(request)
 
     def _fetch_client(self):
-        if settings.APIKEY_LOCALKEYS is not None:
-            keyset = jwt.PyJWKSet(settings.APIKEY_LOCALKEYS)
+        apikey_localkeys = getattr(settings, "APIKEY_LOCALKEYS", None)
+        if apikey_localkeys is not None:
+            keyset = jwt.PyJWKSet(apikey_localkeys)
             return LocalKeysClient([k.key for k in keyset.keys])
         else:
             return Client(settings.APIKEY_ENDPOINT)
 
+    def _fetch_api_key_logger(self):
+        """Fetching the logger at instantiation for easier patching during tests."""
+        api_key_logger = None
+        if (logger_name := getattr(settings, "APIKEY_LOGGER", None)) is not None:
+            api_key_logger = logging.getLogger(logger_name)
+        return api_key_logger
+
+    def _log_api_key(self, token):
+        if self._api_key_logger is not None:
+            self._api_key_logger.info("API KEY: %r", token)
+
 
 def check_token(token, keys):
-    """ Checks a token against list of signing keys."""
+    """Checks a token against list of signing keys."""
     for key in keys:
         try:
             dec = jwt.decode(token, key, algorithms="EdDSA")
@@ -67,6 +83,7 @@ def check_token(token, keys):
             continue
     logger.error("API key not valid with any signing key")
     return None
+
 
 class Client:
     _lock: threading.Lock
@@ -82,7 +99,7 @@ class Client:
         self._keys = self._fetch_keys()
 
         # If no keys can be fetched we keep checking with a shorter _interval
-        # until keys are found. 
+        # until keys are found.
         if self._keys is None:
             self._interval = 5
 
@@ -125,7 +142,6 @@ class Client:
 
 
 class LocalKeysClient:
-
     def __init__(self, keys):
         self._keys = keys
 
