@@ -10,6 +10,6 @@ pytest-django==4.5.2
 PyJWT[crypto]==2.6.0
 six==1.16.0
 sqlparse==0.4.4
-uwsgi==2.0.21
+uwsgi==2.0.22
 
 setuptools>=65.5.1 # CVE-2022-40897
