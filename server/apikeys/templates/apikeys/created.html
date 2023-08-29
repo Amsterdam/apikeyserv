@@ -1,12 +1,21 @@
 <html>
   <head>
     <title>API-sleutel aangevraagd / API key requested</title>
+    <link rel="stylesheet" 
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
   </head>
 
   <body>
-    <p>Dank u voor uw aanvraag. Hieronder vindt u de API key.</p>
-    <p>Thank you for your request. Below you find the API key.</p>
-    <pre> {{ apikey}}</pre>
+    <div class="container">
+        <h3>Dank u voor uw aanvraag. Hieronder vindt u de API key.</h3>
+        <p>Thank you for your request. Below you find the API key.</p>
 
+        <p>
+            Bewaar deze key goed, hij dient te worden gebruikt bij het aanroepen van onze API's. Let op: deze
+            key wordt niet gemaild. Bij het sluiten van dit scherm, verdwijnt ook de key. U dient de key te kopieren en op te slaan.
+            Eventueel kunt u wel opnieuw een key aanvragen.
+        </p>
+        <textarea>{{apikey}}</textarea>
+    </div>
   </body>
 </html>

@@ -33,3 +33,9 @@ And add the following constants to you Django settings:
       are collected (path in the url is `/signingkeys/`)
 
 
+If for some reason the middelware cannot be configured to access
+the api key server to collect the signing keys, it is possible to
+put these keys in the `APIKEY_LOCALKEYS` settings variable.
+This variable should contain a serialized json string with signing keys,
+e.g. `[{"kty": "OKP", "alg": "EdDSA", "crv": "Ed25519", "x": "<signing key>"}]`.
+
