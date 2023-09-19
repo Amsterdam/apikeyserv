@@ -94,9 +94,9 @@ def check_token(token, keys):
         try:
             dec = jwt.decode(token, key, algorithms="EdDSA")
             return dec["sub"]
-        except (jwt.InvalidSignatureError, jwt.DecodeError):
+        except (jwt.InvalidSignatureError, jwt.DecodeError, jwt.ExpiredSignatureError):
             continue
-    logger.error("API key not valid with any signing key")
+    logger.error("API key is not valid with any signing key or has expired.")
     return None
 
 
