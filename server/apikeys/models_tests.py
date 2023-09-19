@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import jwt
 import pytest
 
@@ -25,3 +26,13 @@ def test_apikey_sign():
 
     with pytest.raises(Exception):
         jwt.decode(signed, signing_key, algorithms=all_algs - {"EdDSA"})
+
+
+@pytest.mark.django_db
+def test_apikey_expiry():
+    api_key = ApiKey.objects.create(id=1, expires=datetime.now() - timedelta(days=1))
+    SigningKey.objects.create(private=TEST_KEY).save()
+    signing_key = get_signing_key()
+    signed = sign(api_key)
+    with pytest.raises(jwt.ExpiredSignatureError):
+        jwt.decode(signed, signing_key, algorithms="EdDSA")
