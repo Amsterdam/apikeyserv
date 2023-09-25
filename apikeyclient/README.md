@@ -28,9 +28,9 @@ Install the middelware in the settings.py of your Django settings with:
 
 And add the following constants to you Django settings:
 
-    - APIKEY_MANDATORY: an api key is mandatory in incoming requests
     - APIKEY_ENDPOINT: The url of the apikeyserver where the sigingkeys
       are collected (path in the url is `/signingkeys/`)
+    - APIKEY_MANDATORY: an api key is mandatory in incoming requests
 
 
 If for some reason the middelware cannot be configured to access
