@@ -126,6 +126,8 @@ class Client:
         with self._lock:
             keys = self._keys
         keys = keys or []
+        if not keys:
+            logger.warning("No signing keys available!")
         return check_token(token, keys)
 
     def _fetch_keys(self):
@@ -138,6 +140,14 @@ class Client:
             return [k.key for k in keyset.keys]
         except Exception as e:
             logger.error("could not fetch JWKS from %s: %s", self._url, e)
+            # If keys are mandatory, but no signing keys can be fetched,
+            # we should not be able to continue.
+            if bool(settings.APIKEY_MANDATORY):
+                logger.error(
+                    "Because settings.APIKEY_MANDATORY is True, "
+                    "and we cannot connect to the API Key server, we bail out here!"
+                )
+                raise
             return None
 
     def _fetch_loop(self):
