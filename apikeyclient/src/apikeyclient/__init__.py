@@ -111,7 +111,7 @@ class Client:
         self._interval = KEY_FETCH_INTERVAL
         self._url = url
 
-        self._keys = self._fetch_keys()
+        self._keys = self._fetch_keys(bailoutIfNoConnection=True)
 
         # If no keys can be fetched we keep checking with a shorter _interval
         # until keys are found.
@@ -130,7 +130,7 @@ class Client:
             logger.warning("No signing keys available!")
         return check_token(token, keys)
 
-    def _fetch_keys(self):
+    def _fetch_keys(self, bailoutIfNoConnection=False):
         try:
             # Add timeout too avoid blocking this thread for too long.
             resp = requests.get(self._url, timeout=5)
@@ -142,7 +142,7 @@ class Client:
             logger.error("could not fetch JWKS from %s: %s", self._url, e)
             # If keys are mandatory, but no signing keys can be fetched,
             # we should not be able to continue.
-            if bool(settings.APIKEY_MANDATORY):
+            if bool(settings.APIKEY_MANDATORY) and bailoutIfNoConnection:
                 logger.error(
                     "Because settings.APIKEY_MANDATORY is True, "
                     "and we cannot connect to the API Key server, we bail out here!"
