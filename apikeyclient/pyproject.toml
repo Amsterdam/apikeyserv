@@ -10,7 +10,8 @@ dependencies = ['pause>=0.3', 'requests', 'PyJWT[crypto]==2.8.0', 'build']
 [project.optional-dependencies]  
 dev= [
     'build', 
-    'twine'
+    'twine',
+    'requests-mock'
 ]
 
 [project.urls]

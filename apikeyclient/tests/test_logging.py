@@ -3,12 +3,8 @@ import logging
 from django.test import override_settings
 import apikeyclient
 
+from conftest import API_KEY
 
-API_KEY = (
-    "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9."
-    "eyJzdWIiOjcxMjA1OTk3OTA5NzI4NDcwOTQsImV4cCI6MTcyMDc4NjQwN30."
-    "-xGFp4GJTtHZnxo0iGngeRnL04uT-mbKmmPNv95EoYdu8aLVvaHhDq2xdamCQ45KYe_x6A4yr4yB4YI9TmO_Cw"
-)
 
 
 # Duck typing a request.
@@ -57,3 +53,5 @@ def test_no_logging_of_api_keys(caplog):
     with caplog.at_level(logging.INFO):
         middleware(DummyRequest(headers={"X-Api-Key": API_KEY}))
         assert not caplog.records
+
+
