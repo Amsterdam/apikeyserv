@@ -8,11 +8,11 @@ description = "Client for Datadiensten apikeyserv"
 dependencies = ['pause>=0.3', 'requests', 'PyJWT[crypto]==2.8.0', 'build']
 
 [project.optional-dependencies]  
-dev= [
+dev = [
     'build', 
-    'twine',
-    'requests-mock'
+    'twine'
 ]
+test = ['requests-mock']
 
 [project.urls]
 "Homepage" = "https://github.com/Amsterdam/apikeyserv"
