@@ -30,7 +30,6 @@ class ApiKey(models.Model):
     #
     # Making this the primary key ensures uniqueness.
     id = models.BigIntegerField(default=secure_random, primary_key=True)
-    # Name of contactperson 1
     contactperson_1_name = models.CharField(
         max_length=256, null=True, blank=True, verbose_name="Contactpersoon"
     )
@@ -41,7 +40,6 @@ class ApiKey(models.Model):
         default="",
         verbose_name="E-mailadres",
     )
-    # Name of contactperson 1
     contactperson_2_name = models.CharField(
         max_length=256, null=True, blank=True, verbose_name="Tweede contactpersoon"
     )

@@ -17,11 +17,18 @@
             waarbij u uw contactgegevens kunt updaten en controleren. U wordt hiervan tijdig op de
             hoogte gebracht. Voor vragen over de API keys of voor het verwijderen van uw contactgegevens, kunt u ons bereiken op
             dataplatform@amsterdam.nl. <br> 
-            Uw contactgegevens worden niet langer bewaard dan nodig om over wijzigingen in onze API’s met
-            u te kunnen communiceren. <br>
+
+            Uw contactgegevens worden niet langer bewaard dan nodig om over wijzigingen in onze API’s 
+            en dataproducten met u te kunnen communiceren. <br>
             Voor informatie over het verwerken van persoonsgegevens door de Gemeente Amsterdam kunt u terecht op
             <a href="https://www.amsterdam.nl/privacy/privacyverklaring/">deze pagina</a>.
         </p>
+
+        <p>
+            Technische documentatie over het gebruik van de API Keys
+                is <a href="../docs.html">hier</a> te vinden.
+        </p>
+
         <form action="{{ request.path }}" method="post">
           {% csrf_token %}
           {{ form.as_p }}
