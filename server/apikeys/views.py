@@ -102,3 +102,8 @@ def request_new_key(request):
         form = RequestForm()
 
     return render(request, "apikeys/form.html", {"form": form})
+
+
+
+def documentation(request):
+    return render(request, "apikeys/docs.html", {})

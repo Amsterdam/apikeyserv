@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>API Key useage</title>
+    <link rel="stylesheet" 
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  </head>
+
+  <body>
+    <div class="container">
+        <h2>Using the API keys</h2>
+
+        <p>
+           To use the api keys for gemeente amsterdam APIs, the
+            first step is to obtain a key using the online <a href="./register">form</a>.
+
+        </p>
+        <p>
+            When accessing the APIs, every http request needs
+            to use an <code>X-Api-Key</code> request header that has the
+            value of the api key that has been obtained by filling out the 
+            form mentioned above.
+        </p>
+
+        <p>
+            Geotools that are using the WFS endpoints are not always
+            able to use an http request header. 
+            So, it is also possible to use
+            a query parameter <code>x-api-key</code> with the api key. <br />
+            However, if possible, use an http request header,
+            because that is less error-prone.
+        </p>
+
+        <p>
+            Example using curl for a REST API call with the API key:
+            <code>curl https://api.data.amsterdam.nl/v1/gebieden/wijken/ -H "X-Api-Key: very...long...token"</code>.
+        </p>
+
+        <p>
+            NB. The API Key is only being used to register the 
+            useage of our APIs. It does not provide any
+            authentication or authorizations to the APIs.
+        </p>
+
+    </div>
+  </body>
+</html>
+
+
+
