@@ -101,9 +101,10 @@ def request_new_key(request):
     else:
         form = RequestForm()
 
-    return render(request, "apikeys/form.html", {"form": form})
-
+    docs_url = request.build_absolute_uri("/docs/")
+    return render(request, "apikeys/form.html", {"form": form, "docs_url": docs_url})
 
 
 def documentation(request):
-    return render(request, "apikeys/docs.html", {})
+    form_url = request.build_absolute_uri("/register/")
+    return render(request, "apikeys/docs.html", {"form_url": form_url})
