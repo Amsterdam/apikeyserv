@@ -9,5 +9,5 @@ urlpatterns = [
     path("register/", views.request_new_key),
     path("signingkeys/", views.index, name="index"),
     path("apikeys/", views.api_keys),
-    path("docs.html", views.documentation),
+    path("docs/", views.documentation),
 ]
