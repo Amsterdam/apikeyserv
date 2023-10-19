@@ -5,6 +5,7 @@ from typing import Optional
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -84,6 +85,12 @@ def public_key(priv_pem: str, id: int) -> Optional[Ed25519PublicKey]:
         return None
 
 
+def _build_url_with_script_name(request, path):
+    if (forced_script_name := settings.FORCE_SCRIPT_NAME) is not None:
+        path = forced_script_name + path
+    return request.build_absolute_uri(path)
+
+
 def request_new_key(request):
     """Handle a (POST) request for a new API key."""
     if request.method == "POST":
@@ -101,10 +108,10 @@ def request_new_key(request):
     else:
         form = RequestForm()
 
-    docs_url = request.build_absolute_uri("/docs/")
+    docs_url = _build_url_with_script_name(request, "/docs/")
     return render(request, "apikeys/form.html", {"form": form, "docs_url": docs_url})
 
 
 def documentation(request):
-    form_url = request.build_absolute_uri("/register/")
+    form_url =_build_url_with_script_name(request, "/register/")
     return render(request, "apikeys/docs.html", {"form_url": form_url})
