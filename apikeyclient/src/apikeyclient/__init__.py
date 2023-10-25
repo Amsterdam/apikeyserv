@@ -4,8 +4,7 @@ import logging
 import threading
 
 from django.conf import settings
-from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.http.request import MediaType
+from django.http import HttpRequest, JsonResponse
 import jwt
 import pause
 import requests
@@ -61,12 +60,6 @@ class ApiKeyMiddleware:
             if who is None:
                 return JsonResponse({"message": "invalid API key"}, status=HTTPStatus.BAD_REQUEST)
         return self._get_response(request)
-
-    def _has_explicit_html_media_type(self, media_types: list[MediaType]):
-        for media_type in media_types:
-            if media_type.main_type == "text" and media_type.sub_type == "html":
-                return True
-        return False
 
     def _fetch_client(self):
         apikey_localkeys = getattr(settings, "APIKEY_LOCALKEYS", None)
