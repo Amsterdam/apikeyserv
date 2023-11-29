@@ -12,9 +12,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         - name: Call Azure
-          uses: Azure/pipelines@v1
+          uses: jjmurre/trigger-ado-pipeline@v1
           with:
-            azure-devops-project-url: ${{ vars.AZURE_DEVOPS_URL }}
-            azure-pipeline-name: ${{ vars.AZURE_DEVOPS_PIPELINE }}
-            azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
-            azure-pipeline-variables: '${{ vars.AZURE_PIPELINE_VARS }}'
+            pipeline-id: 1908
+            organisation: CloudCompetenceCenter
+            project: 'Data Diensten'
+            pat-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
+            template-params: '{"environment": "dev"}'
