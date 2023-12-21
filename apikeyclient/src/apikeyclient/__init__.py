@@ -50,7 +50,14 @@ class ApiKeyMiddleware:
         if request.headers.get("User-Agent", "").startswith("Mozilla"):
             return self._get_response(request)
 
-        token = request.headers.get("X-Api-Key", request.GET.get("x-api-key"))
+        token = request.headers.get("X-Api-Key")
+        if token is None:
+            token = request.GET.get("x-api-key")
+            if token:
+                # Make a copy of request.GET, to mutate it
+                request.GET = request.GET.copy()
+                # we need to get rid of the query param, DSO API does not recognize it
+                del request.GET['x-api-key']
         if token is None and self._mandatory:
             return JsonResponse({"message": "API key missing"}, status=HTTPStatus.UNAUTHORIZED)
         if token is not None:

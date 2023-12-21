@@ -35,7 +35,7 @@ def index(_request):
     return HttpResponse('{"status": "ok"}', content_type="application/json")
 
 
-urlpatterns = (re_path(r"^$", index),)
+urlpatterns = (re_path(r"^$", index), re_path(r"^v1/wfs$", index))
 
 application = get_wsgi_application()
 
