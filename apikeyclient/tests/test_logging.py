@@ -1,21 +1,9 @@
-from dataclasses import dataclass, field
 import logging
 from django.test import override_settings
 import apikeyclient
 
 from conftest import API_KEY
-
-
-
-# Duck typing a request.
-@dataclass
-class DummyRequest:
-    headers: dict = field(default_factory=dict)
-    GET: dict = field(default_factory=dict)
-
-
-def get_response(_request):
-    _request
+from utils import DummyRequest, get_response
 
 
 def test_logging_of_api_keys(caplog):
