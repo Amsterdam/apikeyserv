@@ -28,6 +28,8 @@ class ApiKeyMiddleware:
     * APIKEY_MANDATORY, boolean that indicates whether API keys are required.
       If set to False, API keys are checked only when they are present, while
       requests without a key are still allowed.
+    * APIKEY_ALLOW_EMPTY, boolean indicating that an empty API key is allowed,
+      so, only the key needs to be in a header, it can be empty.
     * APIKEY_LOCALKEYS, serialized json string with signing keys.
       If this setting is provided, keys will *not* be collected from APIKEY_ENDPOINT.
       Using this setting is only meant as a fallback mechanism, because deactivating
@@ -39,6 +41,7 @@ class ApiKeyMiddleware:
         self._client = self._fetch_client()
         self._get_response = get_response
         self._mandatory = bool(settings.APIKEY_MANDATORY)
+        self._allow_empty = bool(settings.APIKEY_ALLOW_EMPTY)
         self._api_key_logger = self._fetch_api_key_logger()
 
     def __call__(self, request: HttpRequest):
@@ -61,6 +64,8 @@ class ApiKeyMiddleware:
         if token is None and self._mandatory:
             return JsonResponse({"message": "API key missing"}, status=HTTPStatus.UNAUTHORIZED)
         if token is not None:
+            if token.strip() == "" and self._allow_empty:
+                return self._get_response(request)
             # Log the API KEY, also if it is not valid.
             self._log_api_key(token)
             who = self._client.check(token)
