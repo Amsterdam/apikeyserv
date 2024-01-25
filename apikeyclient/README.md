@@ -30,7 +30,10 @@ And add the following constants to you Django settings:
 
     - APIKEY_ENDPOINT: The url of the apikeyserver where the sigingkeys
       are collected (path in the url is `/signingkeys/`)
-    - APIKEY_MANDATORY: an api key is mandatory in incoming requests
+    - APIKEY_MANDATORY: an api key is mandatory in incoming requests (default: false)
+    - APIKEY_ALLOW_EMPTY: an api key can be empty (default: true)
+    - APIKEY_LOCALKEYS: serialized json string with signingkeys,
+      if defined, keys will *not* be collected from APIKEY_ENDPOINT
 
 
 If for some reason the middelware cannot be configured to access
