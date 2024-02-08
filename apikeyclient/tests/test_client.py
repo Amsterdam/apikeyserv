@@ -26,12 +26,30 @@ def test_client_with_empty_key_succeeds():
         assert res.status_code == HTTPStatus.OK
 
 
+def test_client_with_allowed_prefix_succeeds():
+    """Prove that middleware works with path_prefix that is allowed."""
+    with override_settings(APIKEY_MANDATORY=True, APIKEY_ALLOW_PATH_PREFIX_WHITELIST=["/v1/wfs"]):
+        middleware = apikeyclient.ApiKeyMiddleware(get_response)
+        res = middleware(DummyRequest(headers={"X-Api-Key": ""}, path="/v1/wfs/some-dataset"))
+        assert res.status_code == HTTPStatus.OK
+
+
+def test_client_with_unallowed_prefix_fails():
+    """Prove that middleware does not work with path_prefix that is not allowed."""
+    with override_settings(APIKEY_MANDATORY=True, APIKEY_ALLOW_PATH_PREFIX_WHITELIST=["/v1/wfs"]):
+        middleware = apikeyclient.ApiKeyMiddleware(get_response)
+        res = middleware(
+            DummyRequest(headers={"X-Api-Key": "invalid key"}, path="/v1/some-dataset/some-table")
+        )
+        assert res.status_code == HTTPStatus.BAD_REQUEST
+
+
 @pytest.mark.parametrize(
     "mandatory, allow_empty", [(True, False), (False, True), (True, True), (False, False)]
 )
-def test_client_with_wrong_key_fails(mandatory, allow_empty):
+def test_client_with_invalid_key_fails(mandatory, allow_empty):
     """Prove that middleware fails with a wrong key, for all combinations."""
     with override_settings(APIKEY_MANDATORY=mandatory, APIKEY_ALLOW_EMPTY=allow_empty):
         middleware = apikeyclient.ApiKeyMiddleware(get_response)
-        res = middleware(DummyRequest(headers={"X-Api-Key": "wrong key"}))
+        res = middleware(DummyRequest(headers={"X-Api-Key": "invalid key"}))
         assert res.status_code == HTTPStatus.BAD_REQUEST

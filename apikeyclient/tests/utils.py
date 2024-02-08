@@ -6,6 +6,7 @@ from django.http import JsonResponse
 class DummyRequest:
     headers: dict = field(default_factory=dict)
     GET: dict = field(default_factory=dict)
+    path: str = "/dummy"
 
 
 def get_response(_request):

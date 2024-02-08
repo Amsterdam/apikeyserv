@@ -30,6 +30,7 @@ class ApiKeyMiddleware:
       requests without a key are still allowed.
     * APIKEY_ALLOW_EMPTY, boolean indicating that an empty API key is allowed,
       so, only the key needs to be in a header, it can be empty.
+    * APIKEY_ALLOW_PATH_PREFIX_WHITELIST, list of pathprefixes that are always allowed
     * APIKEY_LOCALKEYS, serialized json string with signing keys.
       If this setting is provided, keys will *not* be collected from APIKEY_ENDPOINT.
       Using this setting is only meant as a fallback mechanism, because deactivating
@@ -42,14 +43,19 @@ class ApiKeyMiddleware:
         self._get_response = get_response
         self._mandatory = bool(settings.APIKEY_MANDATORY)
         self._allow_empty = bool(settings.APIKEY_ALLOW_EMPTY)
+        self._allow_path_prefix_whitelist = getattr(
+            settings, "APIKEY_ALLOW_PATH_PREFIX_WHITELIST", ("/v1/wfs",)
+        )
         self._api_key_logger = self._fetch_api_key_logger()
 
     def __call__(self, request: HttpRequest):
-
         # We skip api key checks for browser-based access
         # We deliberately make this a very simple check, because using
         # the full user agent for checking (e.g. with django-user-agents)
         # is overkill, and also a bit brittle (too many user agents to keep track of).
+        if request.path.startswith(tuple(self._allow_path_prefix_whitelist)):
+            return self._get_response(request)
+
         if request.headers.get("User-Agent", "").startswith("Mozilla"):
             return self._get_response(request)
 
@@ -60,7 +66,7 @@ class ApiKeyMiddleware:
                 # Make a copy of request.GET, to mutate it
                 request.GET = request.GET.copy()
                 # we need to get rid of the query param, DSO API does not recognize it
-                del request.GET['x-api-key']
+                del request.GET["x-api-key"]
         if token is None and self._mandatory:
             return JsonResponse({"message": "API key missing"}, status=HTTPStatus.UNAUTHORIZED)
         if token is not None:
