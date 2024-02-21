@@ -1,0 +1,11 @@
+asgiref==3.7.2
+cffi==1.16.0
+Django==4.2.10
+django-cors-headers==4.3.1
+django-healthchecks==1.5.0
+psycopg2-binary==2.9.9
+pycparser==2.21
+PyJWT[crypto]>=2.8.*
+six==1.16.0
+sqlparse==0.4.4
+uwsgi==2.0.24
