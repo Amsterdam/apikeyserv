@@ -9,8 +9,9 @@ sync:
 
 .PHONY: requirements
 requirements: requirements.in requirements_dev.in
-	pip-compile -v --generate-hashes --allow-unsafe --output-file requirements.txt requirements.in
-	pip-compile -v --generate-hashes --allow-unsafe --output-file requirements_dev.txt requirements_dev.in
+	pip install pip-tools
+	pip-compile -v --output-file requirements.txt requirements.in
+	pip-compile -v --allow-unsafe --output-file requirements_dev.txt requirements_dev.in
 
 .PHONY: upgrade
 upgrade:
