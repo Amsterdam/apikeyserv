@@ -7,5 +7,5 @@ psycopg2-binary==2.9.9
 pycparser==2.21
 PyJWT[crypto]>=2.8.*
 six==1.16.0
-sqlparse==0.4.4
+sqlparse==0.5.0
 uwsgi==2.0.24
