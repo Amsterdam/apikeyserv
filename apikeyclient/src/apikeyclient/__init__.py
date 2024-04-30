@@ -22,7 +22,7 @@ class ApiKeyMiddleware:
     the API key server to fetch the public signing keys. That means it can
     check API keys without connectivity to the API key server.
 
-    Needs two settings:
+    Needs a number of settings:
     * APIKEY_ENDPOINT, to fetch signing keys from. Normally the /signingkeys/
       endpoint from apikeyserv.
     * APIKEY_MANDATORY, boolean that indicates whether API keys are required.

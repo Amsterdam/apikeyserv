@@ -130,4 +130,4 @@ The Django settings variables `APIKEY_ENDPOINT` and `APIKEY_MANDATORY` (0 or 1)
 that are needed for the middleware component can be configured as environment variables.
 
 
-Copyright 2023 Gemeente Amsterdam. All rights reserved.
+Copyright 2024 Gemeente Amsterdam. All rights reserved.

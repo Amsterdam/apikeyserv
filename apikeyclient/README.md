@@ -42,3 +42,9 @@ put these keys in the `APIKEY_LOCALKEYS` settings variable.
 This variable should contain a serialized json string with signing keys,
 e.g. `[{"kty": "OKP", "alg": "EdDSA", "crv": "Ed25519", "x": "<signing key>"}]`.
 
+
+Publishing to PyPI
+==================
+
+The process to publish the API Key client middleware package to PyPI has been described on the Datadiensten ADO Wiki.
+
