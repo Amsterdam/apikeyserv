@@ -42,7 +42,7 @@ pyjwt[crypto]==2.8.0
     # via
     #   -r requirements.in
     #   pyjwt
-requests==2.31.0
+requests==2.32.0
     # via django-healthchecks
 six==1.16.0
     # via -r requirements.in
