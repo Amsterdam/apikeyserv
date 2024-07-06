@@ -9,7 +9,7 @@ asgiref==3.7.2
     #   -r requirements.in
     #   django
     #   django-cors-headers
-certifi==2024.2.2
+certifi==2024.7.4
     # via
     #   django-healthchecks
     #   requests
