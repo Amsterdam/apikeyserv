@@ -57,8 +57,8 @@ Keys can be retired by unchecking their "active" flag.
 Managing requirements
 =========================
 
-This project uses `pip-tools <https://pypi.org/project/pip-tools/>`__
-and `pur <https://pypi.org/project/pur/>`__ to manage the
+This project uses [pip-tools](https://pypi.org/project/pip-tools/)
+and [pur](https://pypi.org/project/pur/) to manage the
 ``requirements.txt`` file.
 
 To add a Python dependency to the project:
