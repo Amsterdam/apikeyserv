@@ -3,9 +3,10 @@ import pytest
 
 
 API_KEY = (
+    # Generated in the admin, valid until 2999
     "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9."
-    "eyJzdWIiOjcxMjA1OTk3OTA5NzI4NDcwOTQsImV4cCI6MTcyMDc4NjQwN30."
-    "-xGFp4GJTtHZnxo0iGngeRnL04uT-mbKmmPNv95EoYdu8aLVvaHhDq2xdamCQ45KYe_x6A4yr4yB4YI9TmO_Cw"
+    "eyJzdWIiOjQ3MzQ1NTQwMjA0Njg1OTkxMDIsImV4cCI6MzI0OTA5NDk1NjJ9."
+    "ON3rAWBzEMlPElT4kJCkfLvtwozSoXujv1x1T2PStz1pOdKWGYr3qLyIQVjGiQR_gBEAOx4GReclxiKkj0ykCw"
 )
 
 SIGNING_KEYS = [
@@ -13,7 +14,7 @@ SIGNING_KEYS = [
         "kty": "OKP",
         "alg": "EdDSA",
         "crv": "Ed25519",
-        "x": "URvrWoqvlzw9F1DU_De_uRZmWR-OzusYsJGp4CLvaDo",
+        "x": "AyWNdu76ZooWm09lIuFcfckN5uzWIKsoyyC55TZnJMk",
     }
 ]
 
