@@ -1,4 +1,4 @@
-FROM python:3.12-slim-bookworm AS builder
+FROM python:3.12-slim-bullseye AS builder
 MAINTAINER datapunt@amsterdam.nl
 
 RUN apt -y update && apt install -y git
@@ -7,7 +7,7 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Start runtime image.
-FROM python:3.12-slim-bookworm
+FROM python:3.12-slim-bullseye
 
 RUN useradd -M -U datapunt
 
