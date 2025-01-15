@@ -13,6 +13,9 @@ RUN useradd -M -U datapunt
 
 RUN apt -y update && apt -y upgrade
 
+# Install libexpat1 for uwsgi
+RUN apt -y install libexpat1
+
 # Copy python build artifacts from builder image
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
 COPY --from=builder /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/site-packages/
