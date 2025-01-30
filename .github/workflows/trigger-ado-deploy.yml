@@ -17,16 +17,8 @@ jobs:
         - name: Call Azure dev build
           uses: amsterdam/trigger-ado-pipeline@v1
           with:
-            pipeline-id: 1908
-            organisation: CloudCompetenceCenter
-            project: 'Data Diensten'
+            pipeline-id: ${{ secrets.AZURE_DEVOPS_PIPELINE_ID }}
+            organisation: ${{ secrets.AZURE_DEVOPS_ORG }}
+            project: ${{ secrets.AZURE_DEVOPS_PROJECT }}
             pat-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
-            template-params: '{"environment": "dev"}'
-        - name: Call Azure prd build
-          uses: amsterdam/trigger-ado-pipeline@v1
-          with:
-            pipeline-id: 1908
-            organisation: CloudCompetenceCenter
-            project: 'Data Diensten'
-            pat-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
-            template-params: '{"environment": "prd"}'
+            template-params: '{"environments": "- dev\n- prd", "branch": "main", "akscluster": "blue"}'
