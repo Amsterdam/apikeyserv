@@ -1,9 +1,9 @@
 FROM python:3.12-slim-bullseye AS builder
 LABEL maintainer="datapunt@amsterdam.nl"
 
-RUN sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list \
-    && apt -y update --allow-releaseinfo-change \
-    && apt install -y git
+RUN sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list
+RUN apt -y update --allow-releaseinfo-change
+RUN apt install -y git
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
@@ -13,10 +13,10 @@ FROM python:3.12-slim-bullseye
 
 RUN useradd -M -U datapunt
 
-RUN sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list \
-    && apt -y update --allow-releaseinfo-change \
-    && apt -y upgrade \
-    && apt install -y netcat-openbsd
+RUN sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list
+RUN apt -y update --allow-releaseinfo-change
+RUN apt -y upgrade
+RUN apt install -y netcat-openbsd
 
 # Copy python build artifacts from builder image
 COPY --from=builder /usr/local/bin/ /usr/local/bin/

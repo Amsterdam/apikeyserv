@@ -1,9 +1,9 @@
 FROM python:3.12-slim-bullseye AS builder
 LABEL maintainer="datapunt@amsterdam.nl"
 
-RUN sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list \
-    && apt -y update --allow-releaseinfo-change \
-    && apt install -y gcc libffi-dev python3-dev
+RUN sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list
+RUN apt -y update --allow-releaseinfo-change
+RUN apt install -y gcc libffi-dev python3-dev
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
@@ -13,9 +13,9 @@ FROM python:3.12-slim-bullseye
 
 RUN useradd -M -U datapunt
 
-RUN sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list \
-    && apt -y update --allow-releaseinfo-change \
-    && apt -y upgrade
+RUN sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list
+RUN apt -y update --allow-releaseinfo-change
+RUN apt -y upgrade
 
 # Install libexpat1 for uwsgi
 RUN apt -y install libexpat1
