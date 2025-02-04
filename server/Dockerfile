@@ -1,5 +1,5 @@
 FROM python:3.12-slim-bullseye AS builder
-MAINTAINER datapunt@amsterdam.nl
+LABEL maintainer="datapunt@amsterdam.nl"
 
 RUN set -e \
     && sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list \
