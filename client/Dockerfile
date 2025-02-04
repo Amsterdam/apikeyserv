@@ -1,7 +1,7 @@
 FROM python:3.12-slim-bullseye AS builder
 MAINTAINER datapunt@amsterdam.nl
 
-RUN apt -y update && apt install -y git
+RUN apt -y update --allow-releaseinfo-change && apt install -y git
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
@@ -11,7 +11,7 @@ FROM python:3.12-slim-bullseye
 
 RUN useradd -M -U datapunt
 
-RUN apt -y update && apt -y upgrade && apt install -y netcat-openbsd
+RUN apt -y update --allow-releaseinfo-change && apt -y upgrade && apt install -y netcat-openbsd
 
 # Copy python build artifacts from builder image
 COPY --from=builder /usr/local/bin/ /usr/local/bin/

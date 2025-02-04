@@ -1,7 +1,7 @@
 FROM python:3.12-slim-bullseye AS builder
 MAINTAINER datapunt@amsterdam.nl
 
-RUN apt -y update && apt install -y gcc libffi-dev python3-dev
+RUN apt -y update --allow-releaseinfo-change && apt install -y gcc libffi-dev python3-dev
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
@@ -11,7 +11,7 @@ FROM python:3.12-slim-bullseye
 
 RUN useradd -M -U datapunt
 
-RUN apt -y update && apt -y upgrade
+RUN apt -y update --allow-releaseinfo-change && apt -y upgrade
 
 # Install libexpat1 for uwsgi
 RUN apt -y install libexpat1
