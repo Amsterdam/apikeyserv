@@ -3,7 +3,8 @@ MAINTAINER datapunt@amsterdam.nl
 
 RUN set -e \
     && sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list \
-    && apt -y update && apt install -y git
+    && apt -y update --allow-releaseinfo-change \
+    && apt install -y git
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
@@ -15,7 +16,7 @@ RUN useradd -M -U datapunt
 
 RUN set -e \
     && sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list \
-    && apt -y update \
+    && apt -y update --allow-releaseinfo-change \
     && apt -y upgrade \
     && apt install -y netcat-openbsd
 

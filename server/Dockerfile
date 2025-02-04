@@ -3,7 +3,7 @@ MAINTAINER datapunt@amsterdam.nl
 
 RUN set -e \
     && sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list \
-    && apt -y update \
+    && apt -y update --allow-releaseinfo-change \
     && apt install -y gcc libffi-dev python3-dev
 
 COPY requirements.txt ./
@@ -16,7 +16,7 @@ RUN useradd -M -U datapunt
 
 RUN set -e \
     && sed -i 's+http://archive+http://azure.archive+g' /etc/apt/sources.list \
-    && apt -y update \
+    && apt -y update --allow-releaseinfo-change \
     && apt -y upgrade
 
 # Install libexpat1 for uwsgi
