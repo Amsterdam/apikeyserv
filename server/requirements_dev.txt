@@ -27,7 +27,7 @@ click==8.1.7
     #   pur
 cryptography==44.0.1
     # via pyjwt
-django==4.2.21
+django==4.2.22
     # via
     #   -r ./requirements.in
     #   django-cors-headers
