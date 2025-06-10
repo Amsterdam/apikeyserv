@@ -70,7 +70,7 @@ pytest==8.3.2
     #   pytest-django
 pytest-django==4.8.0
     # via -r requirements_dev.in
-requests==2.32.2
+requests==2.32.4
     # via django-healthchecks
 six==1.16.0
     # via -r ./requirements.in
