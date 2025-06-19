@@ -78,7 +78,7 @@ sqlparse==0.5.1
     # via
     #   -r ./requirements.in
     #   django
-urllib3==2.2.2
+urllib3==2.5.0
     # via requests
 uwsgi==2.0.26
     # via -r ./requirements.in
