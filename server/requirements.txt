@@ -21,7 +21,7 @@ charset-normalizer==3.3.2
     # via requests
 cryptography==44.0.1
     # via pyjwt
-django==4.2.24
+django==4.2.25
     # via
     #   -r requirements.in
     #   django-cors-headers
