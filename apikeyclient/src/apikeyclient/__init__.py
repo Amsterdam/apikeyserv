@@ -103,7 +103,7 @@ def check_token(token, keys):
     """Checks a token against list of signing keys."""
     for key in keys:
         try:
-            dec = jwt.decode(token, key, algorithms="EdDSA")
+            dec = jwt.decode(token, key, algorithms="EdDSA", options={'verify_exp': False})
             return dec["sub"]
         except (jwt.InvalidSignatureError, jwt.DecodeError, jwt.ExpiredSignatureError):
             continue
