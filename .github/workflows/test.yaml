@@ -19,7 +19,7 @@ jobs:
 
     services:
       db:
-        image: postgres:12.15
+        image: postgres:14
         env:
           POSTGRES_DB: apikeyserv
           POSTGRES_USER: apikeyserv
