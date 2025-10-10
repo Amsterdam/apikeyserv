@@ -15,11 +15,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.10", "3.11", "3.12"]
 
     services:
       db:
-        image: postgres:12.15
+        image: postgres:14
         env:
           POSTGRES_DB: apikeyserv
           POSTGRES_USER: apikeyserv
