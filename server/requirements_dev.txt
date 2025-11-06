@@ -69,7 +69,7 @@ pycparser==2.22
     # via
     #   -r ./requirements.in
     #   cffi
-pyjwt[crypto]==2.10.1
+pyjwt[crypto]==2.9.0
     # via
     #   -r ./requirements.in
     #   msal
