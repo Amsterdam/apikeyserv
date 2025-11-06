@@ -9,6 +9,10 @@ asgiref==3.8.1
     #   -r ./requirements.in
     #   django
     #   django-cors-headers
+azure-core==1.36.0
+    # via azure-identity
+azure-identity==1.16.1
+    # via -r ./requirements.in
 build==1.0.3
     # via pip-tools
 certifi==2024.7.4
@@ -26,8 +30,11 @@ click==8.1.7
     #   pip-tools
     #   pur
 cryptography==44.0.1
-    # via pyjwt
-django==4.2.25
+    # via
+    #   azure-identity
+    #   msal
+    #   pyjwt
+django==4.2.26
     # via
     #   -r ./requirements.in
     #   django-cors-headers
@@ -40,6 +47,12 @@ idna==3.7
     # via requests
 iniconfig==2.0.0
     # via pytest
+msal==1.34.0
+    # via
+    #   azure-identity
+    #   msal-extensions
+msal-extensions==1.3.1
+    # via azure-identity
 packaging==23.2
     # via
     #   build
@@ -56,9 +69,10 @@ pycparser==2.22
     # via
     #   -r ./requirements.in
     #   cffi
-pyjwt[crypto]==2.9.0
+pyjwt[crypto]==2.10.1
     # via
     #   -r ./requirements.in
+    #   msal
     #   pyjwt
 pyproject-hooks==1.0.0
     # via
@@ -71,13 +85,18 @@ pytest==8.3.2
 pytest-django==4.8.0
     # via -r requirements_dev.in
 requests==2.32.4
-    # via django-healthchecks
+    # via
+    #   azure-core
+    #   django-healthchecks
+    #   msal
 six==1.16.0
     # via -r ./requirements.in
 sqlparse==0.5.1
     # via
     #   -r ./requirements.in
     #   django
+typing-extensions==4.15.0
+    # via azure-core
 urllib3==2.5.0
     # via requests
 uwsgi==2.0.26
