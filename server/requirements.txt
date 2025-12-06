@@ -69,7 +69,7 @@ sqlparse==0.5.1
     #   django
 typing-extensions==4.15.0
     # via azure-core
-urllib3==2.5.0
+urllib3==2.6.0
     # via requests
 uwsgi==2.0.26
     # via -r requirements.in
