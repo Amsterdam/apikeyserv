@@ -5,11 +5,11 @@ requires = ["setuptools", "wheel"]
 name = "datadiensten-apikeyclient"
 version = "0.6.0"
 description = "Client for Datadiensten apikeyserv"
-dependencies = ['pause>=0.3', 'requests', 'PyJWT[crypto]==2.9.0', 'build']
+dependencies = ['pause>=0.3', 'requests', 'PyJWT[crypto]==2.10.1', 'build']
 
-[project.optional-dependencies]  
+[project.optional-dependencies]
 dev = [
-    'build', 
+    'build',
     'twine'
 ]
 test = ['requests-mock']
