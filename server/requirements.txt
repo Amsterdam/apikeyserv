@@ -4,20 +4,20 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
-asgiref==3.8.1
+asgiref==3.11.0
     # via
     #   -r requirements.in
     #   django
     #   django-cors-headers
 azure-core==1.36.0
     # via azure-identity
-azure-identity==1.16.1
+azure-identity==1.25.1
     # via -r requirements.in
 certifi==2024.7.4
     # via
     #   django-healthchecks
     #   requests
-cffi==1.16.0
+cffi==1.17.1
     # via
     #   -r requirements.in
     #   cryptography
@@ -33,7 +33,7 @@ django==4.2.27
     #   -r requirements.in
     #   django-cors-headers
     #   django-healthchecks
-django-cors-headers==4.4.0
+django-cors-headers==4.9.0
     # via -r requirements.in
 django-healthchecks==1.5.0
     # via -r requirements.in
@@ -45,13 +45,13 @@ msal==1.34.0
     #   msal-extensions
 msal-extensions==1.3.1
     # via azure-identity
-psycopg2-binary==2.9.9
+psycopg2-binary==2.9.11
     # via -r requirements.in
-pycparser==2.22
+pycparser==2.23
     # via
     #   -r requirements.in
     #   cffi
-pyjwt[crypto]==2.9.0
+pyjwt[crypto]==2.10.1
     # via
     #   -r requirements.in
     #   msal
@@ -61,15 +61,17 @@ requests==2.32.4
     #   azure-core
     #   django-healthchecks
     #   msal
-six==1.16.0
+six==1.17.0
     # via -r requirements.in
-sqlparse==0.5.1
+sqlparse==0.5.5
     # via
     #   -r requirements.in
     #   django
 typing-extensions==4.15.0
-    # via azure-core
+    # via
+    #   azure-core
+    #   azure-identity
 urllib3==2.6.0
     # via requests
-uwsgi==2.0.26
+uwsgi==2.0.31
     # via -r requirements.in

@@ -4,24 +4,24 @@
 #
 #    pip-compile --allow-unsafe --output-file=requirements_dev.txt requirements_dev.in
 #
-asgiref==3.8.1
+asgiref==3.11.0
     # via
-    #   -r ./requirements.in
+    #   -r requirements.in
     #   django
     #   django-cors-headers
 azure-core==1.36.0
     # via azure-identity
-azure-identity==1.16.1
-    # via -r ./requirements.in
+azure-identity==1.25.1
+    # via -r requirements.in
 build==1.0.3
     # via pip-tools
 certifi==2024.7.4
     # via
     #   django-healthchecks
     #   requests
-cffi==1.16.0
+cffi==1.17.1
     # via
-    #   -r ./requirements.in
+    #   -r requirements.in
     #   cryptography
 charset-normalizer==3.3.2
     # via requests
@@ -36,13 +36,13 @@ cryptography==44.0.1
     #   pyjwt
 django==4.2.27
     # via
-    #   -r ./requirements.in
+    #   -r requirements.in
     #   django-cors-headers
     #   django-healthchecks
-django-cors-headers==4.4.0
-    # via -r ./requirements.in
+django-cors-headers==4.9.0
+    # via -r requirements.in
 django-healthchecks==1.5.0
-    # via -r ./requirements.in
+    # via -r requirements.in
 idna==3.7
     # via requests
 iniconfig==2.0.0
@@ -57,57 +57,61 @@ packaging==23.2
     # via
     #   build
     #   pytest
-pip-tools==7.4.1
+pip-tools==7.5.2
     # via -r requirements_dev.in
 pluggy==1.5.0
     # via pytest
-psycopg2-binary==2.9.9
-    # via -r ./requirements.in
-pur==7.3.2
+psycopg2-binary==2.9.11
+    # via -r requirements.in
+pur==7.3.3
     # via -r requirements_dev.in
-pycparser==2.22
+pycparser==2.23
     # via
-    #   -r ./requirements.in
+    #   -r requirements.in
     #   cffi
-pyjwt[crypto]==2.9.0
+pygments==2.19.2
+    # via pytest
+pyjwt[crypto]==2.10.1
     # via
-    #   -r ./requirements.in
+    #   -r requirements.in
     #   msal
     #   pyjwt
 pyproject-hooks==1.0.0
     # via
     #   build
     #   pip-tools
-pytest==8.3.2
+pytest==9.0.2
     # via
     #   -r requirements_dev.in
     #   pytest-django
-pytest-django==4.8.0
+pytest-django==4.11.1
     # via -r requirements_dev.in
 requests==2.32.4
     # via
     #   azure-core
     #   django-healthchecks
     #   msal
-six==1.16.0
-    # via -r ./requirements.in
-sqlparse==0.5.1
+six==1.17.0
+    # via -r requirements.in
+sqlparse==0.5.5
     # via
-    #   -r ./requirements.in
+    #   -r requirements.in
     #   django
 typing-extensions==4.15.0
-    # via azure-core
+    # via
+    #   azure-core
+    #   azure-identity
 urllib3==2.6.0
     # via requests
-uwsgi==2.0.26
-    # via -r ./requirements.in
+uwsgi==2.0.31
+    # via -r requirements.in
 wheel==0.42.0
     # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
 pip==25.3
     # via pip-tools
-setuptools==78.1.1
+setuptools==80.9.0
     # via
     #   -r requirements_dev.in
     #   pip-tools
