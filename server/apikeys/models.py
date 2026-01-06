@@ -60,6 +60,11 @@ class ApiKey(models.Model):
         api_key_dict["apikey"] = sign(self)
         return api_key_dict
 
+    @property
+    def sub(self):
+        """Returns the subject of the key as a string."""
+        return str(self.id)
+
 
 class SigningKey(models.Model):
     """A signing key pair."""
@@ -81,7 +86,7 @@ def get_signing_key() -> str:
 
 def sign(obj: ApiKey) -> str:
     sign_key = get_signing_key()
-    payload = {"sub": obj.id}
+    payload = {"sub": obj.sub}
     if obj.expires is not None:
         payload["exp"] = obj.expires
     return jwt.encode(payload, sign_key, algorithm="EdDSA")

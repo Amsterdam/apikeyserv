@@ -22,7 +22,7 @@ def test_apikey_sign():
     all_algs = set(jwt.algorithms.get_default_algorithms())
     for algs in [["EdDSA"], all_algs]:
         decoded = jwt.decode(signed, signing_key, algs)
-        assert decoded["sub"] == api_key.id
+        assert decoded["sub"] == api_key.sub
 
     with pytest.raises(Exception):
         jwt.decode(signed, signing_key, algorithms=all_algs - {"EdDSA"})
