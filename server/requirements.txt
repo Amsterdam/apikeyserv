@@ -71,7 +71,7 @@ typing-extensions==4.15.0
     # via
     #   azure-core
     #   azure-identity
-urllib3==2.6.0
+urllib3==2.6.3
     # via requests
 uwsgi==2.0.31
     # via -r requirements.in
