@@ -1,14 +1,13 @@
-from datetime import datetime, timedelta
-from http import HTTPStatus
 import logging
 import threading
+from datetime import datetime, timedelta
+from http import HTTPStatus
 
-from django.conf import settings
-from django.http import HttpRequest, JsonResponse
 import jwt
 import pause
 import requests
-
+from django.conf import settings
+from django.http import HttpRequest, JsonResponse
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +67,9 @@ class ApiKeyMiddleware:
                 # we need to get rid of the query param, DSO API does not recognize it
                 del request.GET["x-api-key"]
         if token is None and self._mandatory:
-            return JsonResponse({"message": "API key missing"}, status=HTTPStatus.UNAUTHORIZED)
+            return JsonResponse(
+                {"message": "API key missing"}, status=HTTPStatus.UNAUTHORIZED
+            )
         if token is not None:
             if token.strip() == "" and self._allow_empty:
                 return self._get_response(request)
@@ -76,7 +77,9 @@ class ApiKeyMiddleware:
             self._log_api_key(token)
             who = self._client.check(token)
             if who is None:
-                return JsonResponse({"message": "invalid API key"}, status=HTTPStatus.BAD_REQUEST)
+                return JsonResponse(
+                    {"message": "invalid API key"}, status=HTTPStatus.BAD_REQUEST
+                )
         return self._get_response(request)
 
     def _fetch_client(self):
@@ -103,7 +106,12 @@ def check_token(token, keys):
     """Checks a token against list of signing keys."""
     for key in keys:
         try:
-            dec = jwt.decode(token, key, algorithms=["EdDSA"], options={'verify_exp': False})
+            dec = jwt.decode(
+                token,
+                key,
+                algorithms=["EdDSA"],
+                options={"verify_exp": False, "verify_sub": False},
+            )
             return dec["sub"]
         except (jwt.InvalidSignatureError, jwt.DecodeError, jwt.ExpiredSignatureError):
             continue
