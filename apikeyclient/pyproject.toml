@@ -3,9 +3,9 @@ requires = ["setuptools", "wheel"]
 
 [project]
 name = "datadiensten-apikeyclient"
-version = "0.7.1"
+version = "0.7.2"
 description = "Client for Datadiensten apikeyserv"
-dependencies = ['pause>=0.3', 'requests', 'PyJWT[crypto]==2.10.1', 'build']
+dependencies = ['pause>=0.3', 'requests', 'PyJWT[crypto]==2.11.0', 'build']
 
 [project.optional-dependencies]
 dev = [

@@ -1,10 +1,17 @@
 import apikeyclient
 from http import HTTPStatus
 from django.test import override_settings
+import jwt
 import pytest
 
 from conftest import API_KEY, SIGNING_KEYS
 from utils import DummyRequest, get_response
+
+
+def test_check_token():
+    keyset = jwt.PyJWKSet(SIGNING_KEYS)
+    sub = apikeyclient.check_token(API_KEY, keyset)
+    assert sub is not None
 
 
 def test_client_with_remote_signing_keys(requests_mock):
