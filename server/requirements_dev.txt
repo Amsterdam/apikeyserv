@@ -19,7 +19,7 @@ certifi==2024.7.4
     # via
     #   django-healthchecks
     #   requests
-cffi==1.17.1
+cffi==2.0.0
     # via
     #   -r requirements.in
     #   cryptography
@@ -29,8 +29,9 @@ click==8.1.7
     # via
     #   pip-tools
     #   pur
-cryptography==44.0.1
+cryptography==46.0.5
     # via
+    #   -r requirements.in
     #   azure-identity
     #   msal
     #   pyjwt
