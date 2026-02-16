@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-02-16 (v0.7.3)
+
+* Upgrade packages with vulnerabilities.
+
 ## 2026-02-04 (v0.7.2)
 
 * Fix use of PyJWT library. In v0.7.1, we did not account for a breaking change in PyJWT with regards to argument type.
