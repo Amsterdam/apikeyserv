@@ -73,7 +73,7 @@ pycparser==2.23
     #   cffi
 pygments==2.19.2
     # via pytest
-pyjwt[crypto]==2.11.0
+pyjwt[crypto]==2.12.0
     # via
     #   -r requirements.in
     #   msal
