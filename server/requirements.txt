@@ -52,7 +52,7 @@ pycparser==2.23
     # via
     #   -r requirements.in
     #   cffi
-pyjwt[crypto]==2.11.0
+pyjwt[crypto]==2.12.0
     # via
     #   -r requirements.in
     #   msal
