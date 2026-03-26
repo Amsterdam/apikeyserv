@@ -57,7 +57,7 @@ pyjwt[crypto]==2.12.0
     #   -r requirements.in
     #   msal
     #   pyjwt
-requests==2.32.4
+requests==2.33.0
     # via
     #   azure-core
     #   django-healthchecks
