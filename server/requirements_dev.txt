@@ -88,7 +88,7 @@ pytest==9.0.2
     #   pytest-django
 pytest-django==4.11.1
     # via -r requirements_dev.in
-requests==2.32.4
+requests==2.33.0
     # via
     #   azure-core
     #   django-healthchecks
