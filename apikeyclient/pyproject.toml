@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 
 [project]
 name = "datadiensten-apikeyclient"
-version = "0.7.4"
+version = "0.7.5"
 description = "Client for Datadiensten apikeyserv"
 dependencies = ['pause>=0.3', 'requests', 'PyJWT[crypto]==2.12.0', 'build']
 
