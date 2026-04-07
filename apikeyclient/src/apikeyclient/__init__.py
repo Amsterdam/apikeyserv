@@ -67,9 +67,7 @@ class ApiKeyMiddleware:
                 # we need to get rid of the query param, DSO API does not recognize it
                 del request.GET["x-api-key"]
         if token is None and self._mandatory:
-            return JsonResponse(
-                {"message": "API key missing"}, status=HTTPStatus.UNAUTHORIZED
-            )
+            return JsonResponse({"message": "API key missing"}, status=HTTPStatus.UNAUTHORIZED)
         if token is not None:
             if token.strip() == "" and self._allow_empty:
                 return self._get_response(request)
@@ -77,9 +75,9 @@ class ApiKeyMiddleware:
             self._log_api_key(token)
             who = self._client.check(token)
             if who is None:
-                return JsonResponse(
-                    {"message": "invalid API key"}, status=HTTPStatus.BAD_REQUEST
-                )
+                return JsonResponse({"message": "invalid API key"}, status=HTTPStatus.BAD_REQUEST)
+            else:
+                request.api_key_subject = who
         return self._get_response(request)
 
     def _fetch_client(self):
