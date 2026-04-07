@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-03-16 (v0.7.5)
+
+* Add api key subject to request in middleware.
+
 ## 2026-03-16 (v0.7.4)
 
 * Upgrade packages with vulnerabilities.

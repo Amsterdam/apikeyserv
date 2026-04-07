@@ -43,3 +43,10 @@ def test_no_logging_of_api_keys(caplog):
         assert not caplog.records
 
 
+def test_subject_added_to_request():
+    middleware = apikeyclient.ApiKeyMiddleware(get_response)
+    request = DummyRequest(headers={"X-Api-Key": API_KEY})
+    response = middleware(request)
+    assert response.status_code == 200
+    assert hasattr(request, "api_key_subject")
+    assert request.api_key_subject == "8470085294294189613"
