@@ -3,5 +3,5 @@
 setuptools>=80.9.0
 pip-tools==7.5.2
 pur == 7.3.3
-pytest==9.0.2
+pytest==9.0.3
 pytest-django==4.11.1
