@@ -67,7 +67,7 @@ psycopg2-binary==2.9.12
     # via -r requirements.in
 pur==7.4.0
     # via -r requirements_dev.in
-pycparser==2.23
+pycparser==3.0
     # via
     #   -r requirements.in
     #   cffi
