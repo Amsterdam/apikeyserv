@@ -1,6 +1,6 @@
 -r ./requirements.in
 
-setuptools>=80.9.0
+setuptools>=82.0.1
 pip-tools==7.5.3
 pur == 7.4.0
 pytest==9.0.3
