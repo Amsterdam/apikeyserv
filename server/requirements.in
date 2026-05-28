@@ -7,7 +7,7 @@ django-healthchecks==1.5.0
 psycopg2-binary==2.9.12
 azure-identity==1.25.3
 pycparser==3.0
-PyJWT[crypto]==2.12.1
+PyJWT[crypto]==2.13.0
 six==1.17.0
 sqlparse==0.5.5
 uwsgi==2.0.31
