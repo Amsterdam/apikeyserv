@@ -40,6 +40,20 @@ put these keys in the `APIKEY_LOCALKEYS` settings variable.
 This variable should contain a serialized json string with signing keys,
 e.g. `[{"kty": "OKP", "alg": "EdDSA", "crv": "Ed25519", "x": "<signing key>"}]`.
 
+Testing
+-------
+
+Install the test dependencies and run pytest from the ``apikeyclient``
+directory:
+
+  python -m pip install .[test]
+  pytest
+
+The default pytest configuration collects coverage for the package source in
+``src/apikeyclient`` and writes ``coverage-apikeyclient.xml`` in the project
+directory. The current minimum coverage threshold is enforced during the test
+run.
+
 Publishing to PyPI
 ------------------
 
