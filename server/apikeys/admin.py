@@ -40,6 +40,9 @@ class SigningKeyAdmin(admin.ModelAdmin):
             # Don't do anything that might log the private key.
             return "INVALID"
 
+        if key is None:
+            return "INVALID"
+
         return base64_public_key(key)
 
 

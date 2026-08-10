@@ -24,6 +24,7 @@ then point to it in the environment and install dependencies:
 
     docker-compose up -d database
     export DATABASE_HOST=localhost
+    export DATABASE_PORT=5438
     cd server
     make install
 
@@ -76,6 +77,39 @@ Or in a single call: ``make upgrade install test``
 
 Django will only be upgraded with patch-level versions.
 To change from e.g. Django 3.0 to 3.1, update the version in ``requirements.in`` yourself.
+
+
+Testing and coverage
+====================
+
+Both Python subprojects collect coverage during their normal ``pytest`` runs.
+
+For the Django server:
+
+    docker-compose up -d database
+    export DATABASE_HOST=localhost
+    export DATABASE_PORT=5438
+    cd server
+    make install
+    pytest
+
+This writes a terminal coverage summary and ``coverage-server.xml`` in the
+``server`` directory. The current local threshold is enforced by pytest-cov.
+
+For the client package:
+
+    cd apikeyclient
+    python -m pip install .[test]
+    pytest
+
+This writes a terminal coverage summary and ``coverage-apikeyclient.xml`` in the
+``apikeyclient`` directory. The client threshold is also enforced locally.
+
+CI runs the full Python version matrix for compatibility, but only one canonical
+Python version collects and enforces coverage. That CI job publishes three
+coverage artifacts: the server XML report, the client XML report, and a combined
+aggregate report at ``coverage-aggregate.xml``. The aggregate coverage gate is
+enforced in CI only.
 
 
 Deployment

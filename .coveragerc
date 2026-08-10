@@ -1,0 +1,11 @@
+[run]
+branch = True
+parallel = True
+
+[report]
+omit =
+    */migrations/*
+    */tests/*
+    */test_*.py
+exclude_also =
+    if settings.DEBUG:
