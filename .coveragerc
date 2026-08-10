@@ -1,0 +1,9 @@
+[run]
+branch = True
+parallel = True
+
+[report]
+omit =
+    */migrations/*
+    */tests/*
+    */test_*.py

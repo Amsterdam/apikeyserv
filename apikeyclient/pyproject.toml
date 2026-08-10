@@ -15,7 +15,8 @@ dev = [
 test = ['pytest', 'pytest-cov', 'requests-mock']
 
 [tool.pytest.ini_options]
-addopts = "--cov=apikeyclient --cov-report=term-missing"
+addopts = "--cov=apikeyclient --cov-config=../.coveragerc --cov-report=term-missing --cov-report=xml:coverage-apikeyclient.xml"
+pythonpath = ["src"]
 testpaths = ["tests"]
 
 [project.urls]
