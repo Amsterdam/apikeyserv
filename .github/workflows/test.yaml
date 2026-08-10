@@ -85,7 +85,7 @@ jobs:
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       run: |
         python -m coverage combine --keep .
-        python -m coverage report
+        python -m coverage report --fail-under=59
         python -m coverage xml -o coverage-aggregate.xml
     - name: Upload coverage artifacts
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
