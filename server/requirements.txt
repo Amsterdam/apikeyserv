@@ -65,7 +65,7 @@ requests==2.33.0
     #   msal
 six==1.17.0
     # via -r requirements.in
-sqlparse==0.5.5
+sqlparse==0.6.0
     # via
     #   -r requirements.in
     #   django
