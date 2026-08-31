@@ -62,7 +62,7 @@ packaging==26.0
     #   build
     #   pytest
     #   wheel
-pip-tools==7.6.0
+pip-tools==7.6.1
     # via -r requirements_dev.in
 pluggy==1.5.0
     # via
@@ -94,7 +94,7 @@ pytest==9.1.1
     #   pytest-django
 pytest-cov==7.1.0
     # via -r requirements_dev.in
-pytest-django==4.13.0
+pytest-django==4.14.0
     # via -r requirements_dev.in
 requests==2.33.0
     # via
