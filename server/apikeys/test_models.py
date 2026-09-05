@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import jwt
 import pytest
 
+from apikeys import pqc
 from apikeys.models import ApiKey, SigningKey, get_signing_key, secure_random, sign
 
 
@@ -15,27 +16,27 @@ def test_apikey_sign():
     api_key = ApiKey.objects.create(id=1)
     SigningKey.objects.create(private=TEST_KEY).save()
     signing_key = get_signing_key()
-    assert signing_key == TEST_KEY
+    assert signing_key.private == TEST_KEY
+    assert signing_key.algorithm == "EdDSA"
 
     signed = sign(api_key)
 
     all_algs = set(jwt.algorithms.get_default_algorithms())
     for algs in [["EdDSA"], all_algs]:
-        decoded = jwt.decode(signed, signing_key, algs)
+        decoded = jwt.decode(signed, signing_key.private, algs)
         assert decoded["sub"] == api_key.sub
 
     with pytest.raises(Exception):
-        jwt.decode(signed, signing_key, algorithms=all_algs - {"EdDSA"})
+        jwt.decode(signed, signing_key.private, algorithms=all_algs - {"EdDSA"})
 
 
 @pytest.mark.django_db
 def test_apikey_expiry():
     api_key = ApiKey.objects.create(id=1, expires=datetime.now() - timedelta(days=1))
     SigningKey.objects.create(private=TEST_KEY).save()
-    signing_key = get_signing_key()
     signed = sign(api_key)
     with pytest.raises(jwt.ExpiredSignatureError):
-        jwt.decode(signed, signing_key, algorithms="EdDSA")
+        jwt.decode(signed, TEST_KEY, algorithms="EdDSA")
 
 
 @pytest.mark.django_db
@@ -80,7 +81,7 @@ def test_get_signing_key_returns_newest_active_key():
     SigningKey.objects.filter(pk=old_key.pk).update(created=old_created)
     SigningKey.objects.filter(pk=newest_key.pk).update(created=new_created)
 
-    assert get_signing_key() == "newest"
+    assert get_signing_key().private == "newest"
 
 
 def test_secure_random_returns_non_negative_63_bit_integer():
@@ -95,3 +96,34 @@ def test_apikey_sub_is_stringified_primary_key():
     api_key = ApiKey.objects.create(id=789)
 
     assert api_key.sub == "789"
+
+
+@pytest.mark.django_db
+def test_apikey_sign_with_mldsa65_key():
+    private_pem = pqc.generate_private_key_pem()
+    SigningKey.objects.create(private=private_pem, algorithm=pqc.ALGORITHM)
+    api_key = ApiKey.objects.create(id=1)
+
+    signed = sign(api_key)
+
+    _secret_key, public_key = pqc.split_keys(private_pem)
+    decoded = jwt.decode(signed, public_key, algorithms=[pqc.ALGORITHM])
+    assert decoded["sub"] == api_key.sub
+
+
+@pytest.mark.django_db
+def test_get_signing_key_prefers_newest_active_regardless_of_algorithm():
+    """The 'newest active key wins' rule (already covered above for two EdDSA keys)
+    must hold the same way when the newest key happens to be the other algorithm --
+    get_signing_key has no algorithm-specific logic, and this proves it."""
+    eddsa_key = SigningKey.objects.create(private=TEST_KEY, algorithm="EdDSA", active=True)
+    mldsa_key = SigningKey.objects.create(
+        private=pqc.generate_private_key_pem(), algorithm=pqc.ALGORITHM, active=True
+    )
+
+    older = datetime(2024, 1, 1, 12, 0, 0)
+    newer = datetime(2024, 1, 1, 12, 5, 0)
+    SigningKey.objects.filter(pk=eddsa_key.pk).update(created=older)
+    SigningKey.objects.filter(pk=mldsa_key.pk).update(created=newer)
+
+    assert get_signing_key().algorithm == pqc.ALGORITHM
