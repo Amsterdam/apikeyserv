@@ -50,6 +50,8 @@ idna==3.15
     # via requests
 iniconfig==2.0.0
     # via pytest
+liboqs-python==0.16.0
+    # via -r requirements.in
 msal==1.37.0
     # via
     #   -r requirements.in
