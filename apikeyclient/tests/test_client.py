@@ -2,6 +2,7 @@ import apikeyclient
 from http import HTTPStatus
 from django.test import override_settings
 import jwt
+import oqs
 import pytest
 import threading
 
@@ -13,6 +14,47 @@ def test_check_token():
     keyset = jwt.PyJWKSet(SIGNING_KEYS)
     sub = apikeyclient.check_token(API_KEY, keyset)
     assert sub is not None
+
+
+def test_tagged_keys_from_jwks_returns_eddsa_keys_tagged_correctly():
+    tagged = apikeyclient._tagged_keys_from_jwks(SIGNING_KEYS)
+
+    assert len(tagged) == 1
+    key, algorithms = tagged[0]
+    assert algorithms == ["EdDSA"]
+
+
+def test_tagged_keys_from_jwks_handles_mldsa65_only_keyset():
+    """When a JWKS has no EdDSA (or otherwise PyJWT-recognized) entries at all,
+    jwt.PyJWKSet raises PyJWKSetError for the whole set -- confirm that's caught and
+    treated as zero EdDSA keys, not a crash, as long as an ML-DSA-65 key is present."""
+    with oqs.Signature("ML-DSA-65") as signer:
+        public_key = signer.generate_keypair()
+    import base64
+
+    encoded = base64.urlsafe_b64encode(public_key).rstrip(b"=").decode("ascii")
+    mldsa_only_keys = [{"kty": "AKP", "alg": "ML-DSA-65", "pub": encoded}]
+
+    tagged = apikeyclient._tagged_keys_from_jwks(mldsa_only_keys)
+
+    assert len(tagged) == 1
+    key, algorithms = tagged[0]
+    assert algorithms == ["ML-DSA-65"]
+    assert key == public_key
+
+
+def test_tagged_keys_from_jwks_mixed_eddsa_and_mldsa65():
+    with oqs.Signature("ML-DSA-65") as signer:
+        public_key = signer.generate_keypair()
+    import base64
+
+    encoded = base64.urlsafe_b64encode(public_key).rstrip(b"=").decode("ascii")
+    mixed_keys = SIGNING_KEYS + [{"kty": "AKP", "alg": "ML-DSA-65", "pub": encoded}]
+
+    tagged = apikeyclient._tagged_keys_from_jwks(mixed_keys)
+
+    algorithms_seen = {algs[0] for _key, algs in tagged}
+    assert algorithms_seen == {"EdDSA", "ML-DSA-65"}
 
 
 def test_client_with_remote_signing_keys(requests_mock):
