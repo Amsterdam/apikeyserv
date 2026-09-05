@@ -13,6 +13,12 @@ dev = [
     'twine'
 ]
 test = ['pytest', 'pytest-cov', 'requests-mock']
+# Needed to verify apikeyserv's opt-in ML-DSA-65 (post-quantum) signed keys. Not a
+# hard dependency: liboqs-python needs a C toolchain to build its underlying
+# library, a real cost this package shouldn't force on every consumer just to keep
+# verifying EdDSA keys as it always has. Without this extra installed, apikeyclient
+# still works exactly as before -- it just can't verify ML-DSA-65-signed keys yet.
+pqc = ['liboqs-python==0.16.0']
 
 [tool.pytest.ini_options]
 addopts = "--cov=apikeyclient --cov-config=../.coveragerc --cov-report=term-missing --cov-report=xml:coverage-apikeyclient.xml --cov-fail-under=99"
