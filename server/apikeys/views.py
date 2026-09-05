@@ -11,7 +11,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-from .display import jwks
+from . import pqc
+from .display import jwk
 from .forms import RequestForm
 from .models import ApiKey, SigningKey, sign
 
@@ -25,15 +26,34 @@ def index(request):
 
     keyset = []
 
-    for priv, id in active_keys.values_list("private", "id"):
-        pub = public_key(priv, id)
-        if pub is None:
+    for priv, algorithm, id in active_keys.values_list("private", "algorithm", "id"):
+        entry = public_key_jwk(priv, algorithm, id)
+        if entry is None:
             continue
 
-        keyset.append(pub)
+        keyset.append(entry)
 
-    j = json.dumps(jwks(keyset))
+    j = json.dumps({"keys": keyset})
     return HttpResponse(j, content_type="application/json")
+
+
+def public_key_jwk(priv: str, algorithm: str, id: int) -> Optional[dict]:
+    """Returns the JWK representation of the public key for a signing key's stored
+    private material, dispatching on algorithm. Returns None on any error (e.g.
+    invalid stored key material) instead of raising, matching public_key()'s
+    error-hiding contract below.
+    """
+    if algorithm == pqc.ALGORITHM:
+        try:
+            return pqc.jwk(pqc.public_key_from_pem(priv))
+        except pqc.InvalidKeyError:
+            logger.error("InvalidKeyError while generating JWK for %d", id)
+            return None
+
+    pub = public_key(priv, id)
+    if pub is None:
+        return None
+    return jwk(pub)
 
 
 @csrf_exempt

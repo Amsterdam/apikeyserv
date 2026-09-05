@@ -2,6 +2,7 @@ import pytest
 from django.contrib import admin
 from django.test import RequestFactory
 
+from apikeys import pqc
 from apikeys.admin import ApiKeyAdmin, SigningKeyAdmin
 from apikeys.display import base64_public_key
 from apikeys.models import ApiKey, SigningKey
@@ -21,19 +22,75 @@ def admin_request():
 def test_signing_key_admin_form_accepts_valid_pem():
     admin_instance = SigningKeyAdmin(SigningKey, admin.site)
     form_class = admin_instance.get_form(admin_request())
-    form = form_class(data={"private": TEST_KEY, "active": True})
+    form = form_class(data={"private": TEST_KEY, "algorithm": "EdDSA", "active": True})
 
     assert form.is_valid()
+
+
+@pytest.mark.django_db
+def test_signing_key_admin_form_rejects_missing_private_without_crashing():
+    """clean() must not itself crash when 'private' failed its own required-field
+    validation and never made it into cleaned_data -- the missing-field error is
+    already reported by the field itself, clean() just has nothing left to add."""
+    admin_instance = SigningKeyAdmin(SigningKey, admin.site)
+    form_class = admin_instance.get_form(admin_request())
+    form = form_class(data={"algorithm": "EdDSA", "active": True})
+
+    assert not form.is_valid()
+    assert "private" in form.errors
 
 
 @pytest.mark.django_db
 def test_signing_key_admin_form_rejects_invalid_pem():
     admin_instance = SigningKeyAdmin(SigningKey, admin.site)
     form_class = admin_instance.get_form(admin_request())
-    form = form_class(data={"private": "invalid pem", "active": True})
+    form = form_class(data={"private": "invalid pem", "algorithm": "EdDSA", "active": True})
 
     assert not form.is_valid()
     assert "private" in form.errors
+
+
+@pytest.mark.django_db
+def test_signing_key_admin_form_accepts_valid_mldsa65_key():
+    admin_instance = SigningKeyAdmin(SigningKey, admin.site)
+    form_class = admin_instance.get_form(admin_request())
+    form = form_class(
+        data={
+            "private": pqc.generate_private_key_pem(),
+            "algorithm": pqc.ALGORITHM,
+            "active": True,
+        }
+    )
+
+    assert form.is_valid()
+
+
+@pytest.mark.django_db
+def test_signing_key_admin_form_rejects_eddsa_pem_declared_as_mldsa65():
+    admin_instance = SigningKeyAdmin(SigningKey, admin.site)
+    form_class = admin_instance.get_form(admin_request())
+    form = form_class(data={"private": TEST_KEY, "algorithm": pqc.ALGORITHM, "active": True})
+
+    assert not form.is_valid()
+    assert "private" in form.errors
+
+
+@pytest.mark.django_db
+def test_signing_key_admin_public_key_returns_base64_for_valid_mldsa65_key():
+    admin_instance = SigningKeyAdmin(SigningKey, admin.site)
+    private_pem = pqc.generate_private_key_pem()
+    signing_key = SigningKey(id=1, private=private_pem, algorithm=pqc.ALGORITHM)
+    expected = pqc.base64_public_key(pqc.public_key_from_pem(private_pem))
+
+    assert admin_instance.public_key(signing_key) == expected
+
+
+@pytest.mark.django_db
+def test_signing_key_admin_public_key_returns_invalid_for_bad_mldsa65_data():
+    admin_instance = SigningKeyAdmin(SigningKey, admin.site)
+    signing_key = SigningKey(id=2, private="invalid pem", algorithm=pqc.ALGORITHM)
+
+    assert admin_instance.public_key(signing_key) == "INVALID"
 
 
 def test_signing_key_admin_public_key_returns_base64_for_valid_key():
