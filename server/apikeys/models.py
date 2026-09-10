@@ -7,6 +7,14 @@ import jwt
 
 from django.db import models
 
+from . import pqc
+
+ALGORITHM_EDDSA = "EdDSA"
+ALGORITHM_CHOICES = [
+    (ALGORITHM_EDDSA, "EdDSA (Ed25519)"),
+    (pqc.ALGORITHM, "ML-DSA-65 (post-quantum, FIPS 204)"),
+]
+
 
 def get_expiry_datetime():
     return datetime.today() + timedelta(days=365)
@@ -69,24 +77,33 @@ class ApiKey(models.Model):
 class SigningKey(models.Model):
     """A signing key pair."""
 
-    # The private key, in PEM+PKCS#8 format.
+    # The private key. For EdDSA, in PEM+PKCS#8 format. For ML-DSA-65, in the
+    # PEM-like envelope pqc.generate_private_key_pem() produces (see pqc.py).
     private = models.TextField(null=False)
+    # Which algorithm `private` holds the key material for. Existing rows (created
+    # before this field existed) default to EdDSA, matching their actual content.
+    algorithm = models.CharField(
+        max_length=32, choices=ALGORITHM_CHOICES, default=ALGORITHM_EDDSA, null=False
+    )
     active = models.BooleanField(default=True, null=False)
     created = models.DateTimeField(auto_now_add=True, null=False)
 
 
-def get_signing_key() -> str:
-    """Returns the current signing key's private part.
+def get_signing_key() -> SigningKey:
+    """Returns the current signing key.
 
     The current signing key is the newest key that is marked active.
     """
     keys = SigningKey.objects.filter(active=True).order_by("-created")
-    return keys.first().private
+    return keys.first()
 
 
 def sign(obj: ApiKey) -> str:
-    sign_key = get_signing_key()
+    signing_key = get_signing_key()
     payload = {"sub": obj.sub}
     if obj.expires is not None:
         payload["exp"] = obj.expires
-    return jwt.encode(payload, sign_key, algorithm="EdDSA")
+    if signing_key.algorithm == pqc.ALGORITHM:
+        secret_key, _public_key = pqc.split_keys(signing_key.private)
+        return jwt.encode(payload, secret_key, algorithm=pqc.ALGORITHM)
+    return jwt.encode(payload, signing_key.private, algorithm=ALGORITHM_EDDSA)

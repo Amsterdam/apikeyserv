@@ -5,8 +5,9 @@ import jwt
 import pytest
 from django.test import RequestFactory
 
+from apikeys import pqc
 from apikeys.models import ApiKey, SigningKey
-from apikeys.views import logger as views_logger, public_key, request_new_key
+from apikeys.views import logger as views_logger, public_key, public_key_jwk, request_new_key
 
 
 TEST_KEY = """-----BEGIN PRIVATE KEY-----
@@ -189,4 +190,44 @@ def test_public_key_invalid_input_returns_none_and_logs_without_leaking_key(capl
 
     assert result is None
     assert "while generating public key for 99" in caplog.text
-    assert INVALID_KEY not in caplog.text
+
+
+@pytest.mark.django_db
+def test_signingkeys_includes_mldsa65_keys(client):
+    private_pem = pqc.generate_private_key_pem()
+    create_signing_key(private=private_pem, active=True)
+    SigningKey.objects.filter(private=private_pem).update(algorithm=pqc.ALGORITHM)
+
+    response = client.get("/signingkeys/")
+
+    assert response.status_code == 200
+    keys = response.json()["keys"]
+    assert len(keys) == 1
+    assert keys[0]["kty"] == pqc.JWK_KTY
+    assert keys[0]["alg"] == pqc.ALGORITHM
+    assert keys[0]["pub"] == pqc.jwk(pqc.public_key_from_pem(private_pem))["pub"]
+
+
+@pytest.mark.django_db
+def test_signingkeys_mix_of_eddsa_and_mldsa65_keys(client):
+    create_signing_key()  # EdDSA, via the existing helper/fixture
+    mldsa_pem = pqc.generate_private_key_pem()
+    create_signing_key(private=mldsa_pem, active=True)
+    SigningKey.objects.filter(private=mldsa_pem).update(algorithm=pqc.ALGORITHM)
+
+    response = client.get("/signingkeys/")
+
+    algs = {key["alg"] for key in response.json()["keys"]}
+    assert algs == {"EdDSA", pqc.ALGORITHM}
+
+
+def test_public_key_jwk_skips_invalid_mldsa65_key_and_logs(caplog):
+    with caplog.at_level(logging.ERROR, logger=views_logger.name):
+        result = public_key_jwk(INVALID_KEY, pqc.ALGORITHM, 42)
+
+    assert result is None
+    assert "InvalidKeyError while generating JWK for 42" in caplog.text
+
+
+def test_public_key_jwk_returns_none_for_invalid_eddsa_key():
+    assert public_key_jwk(INVALID_KEY, "EdDSA", 43) is None

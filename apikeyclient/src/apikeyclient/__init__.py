@@ -9,9 +9,13 @@ import requests
 from django.conf import settings
 from django.http import HttpRequest, JsonResponse
 
+from . import pqc
+
 logger = logging.getLogger(__name__)
 
 KEY_FETCH_INTERVAL = 3600  # in seconds
+
+pqc.register()
 
 
 class ApiKeyMiddleware:
@@ -83,8 +87,7 @@ class ApiKeyMiddleware:
     def _fetch_client(self):
         apikey_localkeys = getattr(settings, "APIKEY_LOCALKEYS", None)
         if apikey_localkeys is not None:
-            keyset = jwt.PyJWKSet(apikey_localkeys)
-            return LocalKeysClient([k.key for k in keyset.keys])
+            return LocalKeysClient(_tagged_keys_from_jwks(apikey_localkeys))
         else:
             return Client(settings.APIKEY_ENDPOINT)
 
@@ -101,20 +104,49 @@ class ApiKeyMiddleware:
 
 
 def check_token(token, keys):
-    """Checks a token against list of signing keys."""
-    for key in keys:
+    """Checks a token against list of signing keys.
+
+    Each entry in keys is either a bare key object (assumed to be an EdDSA key, for
+    backward compatibility with callers built before ML-DSA-65 support existed) or a
+    (key, algorithms) tuple naming which algorithm(s) that specific key is valid for
+    -- see _tagged_keys_from_jwks. Restricting each key to its own algorithm(s),
+    rather than trying every key against every algorithm, avoids ever handing one
+    algorithm's key material to a different algorithm's verifier.
+    """
+    for entry in keys:
+        key, algorithms = entry if isinstance(entry, tuple) else (entry, ["EdDSA"])
         try:
             dec = jwt.decode(
                 token,
                 key,
-                algorithms=["EdDSA"],
+                algorithms=algorithms,
                 options={"verify_exp": False, "verify_sub": False},
             )
             return dec["sub"]
-        except (jwt.InvalidSignatureError, jwt.DecodeError, jwt.ExpiredSignatureError):
+        except (
+            jwt.InvalidSignatureError,
+            jwt.DecodeError,
+            jwt.ExpiredSignatureError,
+            jwt.InvalidAlgorithmError,
+        ):
             continue
     logger.error("API key is not valid with any signing key or has expired.")
     return None
+
+
+def _tagged_keys_from_jwks(raw_keys):
+    """Builds the (key, algorithms) list check_token expects from a JWKS 'keys'
+    array: EdDSA keys via PyJWT's own PyJWKSet, plus any ML-DSA-65 keys pqc can
+    extract (see apikeyclient.pqc for why PyJWKSet itself can't see those)."""
+    try:
+        eddsa_keys = [(k.key, ["EdDSA"]) for k in jwt.PyJWKSet(raw_keys).keys]
+    except jwt.PyJWKSetError:
+        # No EdDSA (or otherwise PyJWT-recognized) keys in this set -- fine as long
+        # as there's at least one ML-DSA-65 key below.
+        eddsa_keys = []
+
+    pqc_keys = [(pub, [pqc.ALGORITHM]) for pub in pqc.public_keys_from_jwks(raw_keys)]
+    return eddsa_keys + pqc_keys
 
 
 class Client:
@@ -153,8 +185,7 @@ class Client:
             resp = requests.get(self._url, timeout=5)
             resp.raise_for_status()
             resp_json = resp.json()
-            keyset = jwt.PyJWKSet(resp_json["keys"])
-            return [k.key for k in keyset.keys]
+            return _tagged_keys_from_jwks(resp_json["keys"])
         except Exception as e:
             logger.error("could not fetch JWKS from %s: %s", self._url, e)
             # If keys are mandatory, but no signing keys can be fetched,
