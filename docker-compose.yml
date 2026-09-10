@@ -28,7 +28,7 @@ services:
       REMOTE_PDB_PORT: 4444
     # command: ["sleep", "infinity"]
   database:
-    image: postgres:14
+    image: postgres:${POSTGRES_VERSION:-17}
     ports:
       - "5438:5432"
     environment:
