@@ -47,13 +47,13 @@ msal==1.38.0
     #   msal-extensions
 msal-extensions==1.3.1
     # via azure-identity
-psycopg2-binary==2.9.12
+psycopg2-binary==2.9.13
     # via -r requirements.in
 pycparser==3.0
     # via
     #   -r requirements.in
     #   cffi
-pyjwt[crypto]==2.13.0
+pyjwt[crypto]==2.14.0
     # via
     #   -r requirements.in
     #   msal
