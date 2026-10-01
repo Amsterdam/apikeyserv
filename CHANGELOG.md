@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-01 (v0.7.7)
+
+* Upgrade packages with vulnerabilities.
+
 ## 2026-06-16 (v0.7.6)
 
 * Upgrade packages with vulnerabilities.
