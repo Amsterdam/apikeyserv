@@ -11,7 +11,7 @@ asgiref==3.12.1
     #   django-cors-headers
 azure-core==1.38.0
     # via azure-identity
-azure-identity==1.25.3
+azure-identity==1.26.0
     # via -r requirements.in
 build==1.0.3
     # via pip-tools
@@ -31,7 +31,7 @@ click==8.1.7
     #   pur
 coverage[toml]==7.15.4
     # via pytest-cov
-cryptography==50.0.1
+cryptography==50.0.2
     # via
     #   -r requirements.in
     #   azure-identity
@@ -78,7 +78,7 @@ pycparser==3.0
     #   cffi
 pygments==2.20.0
     # via pytest
-pyjwt[crypto]==2.15.0
+pyjwt[crypto]==2.15.1
     # via
     #   -r requirements.in
     #   msal
