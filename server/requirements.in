@@ -1,13 +1,13 @@
 asgiref==3.12.1
 cffi==2.1.1
 cryptography==50.0.2
-Django==5.2.17
+Django==5.2.18
 django-cors-headers==4.9.0
 django-healthchecks==1.5.0
 psycopg2-binary==2.9.13
 azure-identity==1.26.0
 msal==1.39.0
-pycparser==3.0
+pycparser==3.11
 PyJWT[crypto]==2.15.1
 six==1.17.0
 sqlparse==0.6.0
