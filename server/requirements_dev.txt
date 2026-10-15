@@ -37,7 +37,7 @@ cryptography==50.0.2
     #   azure-identity
     #   msal
     #   pyjwt
-django==5.2.17
+django==5.2.18
     # via
     #   -r requirements.in
     #   django-cors-headers
@@ -62,7 +62,7 @@ packaging==26.0
     #   build
     #   pytest
     #   wheel
-pip-tools==7.6.1
+pip-tools==7.6.2
     # via -r requirements_dev.in
 pluggy==1.5.0
     # via
@@ -72,7 +72,7 @@ psycopg2-binary==2.9.13
     # via -r requirements.in
 pur==7.4.0
     # via -r requirements_dev.in
-pycparser==3.0
+pycparser==3.11
     # via
     #   -r requirements.in
     #   cffi
