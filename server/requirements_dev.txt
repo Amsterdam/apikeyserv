@@ -15,7 +15,7 @@ azure-identity==1.26.0
     # via -r requirements.in
 build==1.0.3
     # via pip-tools
-certifi==2024.7.4
+certifi==2026.10.19
     # via
     #   django-healthchecks
     #   requests
