@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from os import environ as env
 from pathlib import Path
-
+import logging
+import os
 
 def get_path_variable(env_var, default=""):
     """Utility function to get a secret from the filesystem."""
@@ -158,3 +159,44 @@ FORCE_SCRIPT_NAME = env.get('FORCE_SCRIPT_NAME')
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://(\w|\.)+\.amsterdam\.nl$",
 ]
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": (
+                "{asctime} {levelname} {name} "
+                "{process:d} {thread:d} {message}"
+            ),
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": os.environ.get("LOG_LEVEL", "INFO"),
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django.db.backends": {
+            "handlers": ["console"],
+            "level": os.environ.get("DJANGO_DB_LOG_LEVEL", "WARNING"),
+            "propagate": False,
+        },
+    },
+}
+
+
+
+
