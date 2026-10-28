@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from os import environ as env
 from pathlib import Path
-import logging
-import os
 
 def get_path_variable(env_var, default=""):
     """Utility function to get a secret from the filesystem."""
@@ -181,7 +179,7 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console"],
-        "level": os.environ.get("LOG_LEVEL", "INFO"),
+        "level": env.get("LOG_LEVEL", "INFO"),
     },
     "loggers": {
         "django.request": {
@@ -191,12 +189,8 @@ LOGGING = {
         },
         "django.db.backends": {
             "handlers": ["console"],
-            "level": os.environ.get("DJANGO_DB_LOG_LEVEL", "WARNING"),
+            "level": env.get("DJANGO_DB_LOG_LEVEL", "WARNING"),
             "propagate": False,
         },
     },
 }
-
-
-
-
