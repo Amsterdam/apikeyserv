@@ -4,7 +4,7 @@
 #
 #    pip-compile --allow-unsafe --output-file=requirements_dev.txt requirements_dev.in
 #
-asgiref==3.12.1
+asgiref==3.13.0
     # via
     #   -r requirements.in
     #   django
@@ -72,7 +72,7 @@ psycopg2-binary==2.9.13
     # via -r requirements.in
 pur==7.4.0
     # via -r requirements_dev.in
-pycparser==3.11
+pycparser==3.12
     # via
     #   -r requirements.in
     #   cffi
@@ -121,7 +121,7 @@ wheel==0.46.2
 # The following packages are considered to be unsafe in a requirements file:
 pip==26.2
     # via pip-tools
-setuptools==84.1.0
+setuptools==84.2.1
     # via
     #   -r requirements_dev.in
     #   pip-tools
