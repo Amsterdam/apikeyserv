@@ -4,14 +4,14 @@
 #
 #    pip-compile --allow-unsafe --output-file=requirements_dev.txt requirements_dev.in
 #
-asgiref==3.12.1
+asgiref==3.13.0
     # via
     #   -r requirements.in
     #   django
     #   django-cors-headers
 azure-core==1.38.0
     # via azure-identity
-azure-identity==1.26.0
+azure-identity==1.27.0
     # via -r requirements.in
 build==1.0.3
     # via pip-tools
@@ -44,7 +44,7 @@ django==5.2.18
     #   django-healthchecks
 django-cors-headers==4.9.0
     # via -r requirements.in
-django-healthchecks==1.5.0
+django-healthchecks==1.6.0
     # via -r requirements.in
 idna==3.15
     # via requests
@@ -64,7 +64,7 @@ packaging==26.0
     #   wheel
 pip-tools==7.6.2
     # via -r requirements_dev.in
-pluggy==1.5.0
+pluggy==1.7.0
     # via
     #   pytest
     #   pytest-cov
@@ -72,7 +72,7 @@ psycopg2-binary==2.9.13
     # via -r requirements.in
 pur==7.4.0
     # via -r requirements_dev.in
-pycparser==3.11
+pycparser==3.12
     # via
     #   -r requirements.in
     #   cffi
@@ -87,7 +87,7 @@ pyproject-hooks==1.0.0
     # via
     #   build
     #   pip-tools
-pytest==9.1.1
+pytest==9.2.0
     # via
     #   -r requirements_dev.in
     #   pytest-cov
@@ -103,7 +103,7 @@ requests==2.33.0
     #   msal
 six==1.17.0
     # via -r requirements.in
-sqlparse==0.6.0
+sqlparse==0.6.1
     # via
     #   -r requirements.in
     #   django
@@ -121,7 +121,7 @@ wheel==0.46.2
 # The following packages are considered to be unsafe in a requirements file:
 pip==26.2
     # via pip-tools
-setuptools==84.1.0
+setuptools==84.2.1
     # via
     #   -r requirements_dev.in
     #   pip-tools
