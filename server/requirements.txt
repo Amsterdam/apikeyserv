@@ -29,7 +29,7 @@ cryptography==50.0.2
     #   azure-identity
     #   msal
     #   pyjwt
-django==5.2.18
+django==5.2.19
     # via
     #   -r requirements.in
     #   django-cors-headers
