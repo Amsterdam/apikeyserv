@@ -1,4 +1,4 @@
-FROM python:3.14-slim-trixie AS builder
+FROM python:3.15-slim-trixie AS builder
 MAINTAINER datapunt@amsterdam.nl
 
 RUN apt -y update && apt install -y gcc libffi-dev python3-dev
@@ -7,7 +7,7 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Start runtime image.
-FROM python:3.14-slim-trixie
+FROM python:3.15-slim-trixie
 
 RUN useradd -M -U datapunt
 
