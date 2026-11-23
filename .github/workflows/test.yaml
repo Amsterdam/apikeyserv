@@ -53,7 +53,7 @@ jobs:
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       working-directory: server
       run: |
-        pytest
+        uv run pytest
       env:
         COVERAGE_FILE: ${{ github.workspace }}/.coverage.server
         DATABASE_HOST: localhost
@@ -61,7 +61,7 @@ jobs:
       if: matrix.python-version != env.COVERAGE_PYTHON_VERSION
       working-directory: server
       run: |
-        pytest --override-ini="addopts="
+        uv run pytest --override-ini="addopts="
       env:
         DATABASE_HOST: localhost
     - name: Install client dependencies
@@ -72,7 +72,7 @@ jobs:
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       working-directory: apikeyclient
       run: |
-        pytest
+        uv run pytest
       env:
         COVERAGE_FILE: ${{ github.workspace }}/.coverage.apikeyclient
         DATABASE_HOST: localhost
@@ -80,15 +80,15 @@ jobs:
       if: matrix.python-version != env.COVERAGE_PYTHON_VERSION
       working-directory: apikeyclient
       run: |
-        pytest --override-ini="addopts="
+        uv run pytest --override-ini="addopts="
       env:
         DATABASE_HOST: localhost
     - name: Combine coverage reports
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       run: |
-        python -m coverage combine --keep .
-        python -m coverage report --fail-under=95
-        python -m coverage xml -o coverage-aggregate.xml
+        uv run python -m coverage combine --keep .
+        uv run python -m coverage report --fail-under=95
+        uv run python -m coverage xml -o coverage-aggregate.xml
     - name: Upload coverage artifacts
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       uses: actions/upload-artifact@v4
