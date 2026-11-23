@@ -14,9 +14,9 @@ and are checked for validity, meaning that they are signed by one of the signing
 Installation
 ------------
 
-Pip install the middleware package in your project with:
+Install the middleware package in your project with:
 
-    pip install datadiensten-apikeyclient
+    uv add datadiensten-apikeyclient
 
 Install the middelware in the settings.py of your Django settings with:
 
@@ -46,8 +46,8 @@ Testing
 Install the test dependencies and run pytest from the ``apikeyclient``
 directory:
 
-  python -m pip install .[test]
-  pytest
+  uv sync --extra test
+  uv run pytest
 
 The default pytest configuration collects coverage for the package source in
 ``src/apikeyclient`` and writes ``coverage-apikeyclient.xml`` in the project

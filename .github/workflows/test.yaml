@@ -46,8 +46,7 @@ jobs:
     - name: Install server dependencies
       working-directory: server
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install -r requirements_dev.txt
+        uv sync --group dev
     - name: Test Server with coverage
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       working-directory: server
@@ -66,8 +65,7 @@ jobs:
     - name: Install client dependencies
       working-directory: apikeyclient
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install .[test]
+        uv sync --extra test
     - name: Test Middleware with coverage
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       working-directory: apikeyclient

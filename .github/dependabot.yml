@@ -5,22 +5,22 @@
 
 version: 2
 updates:
-  - package-ecosystem: "pip" # See documentation for possible values
+  - package-ecosystem: "uv" # See documentation for possible values
     directory: "/server" # Location of package manifests
     schedule:
       interval: "weekly"
     groups:
-      pip-minor-and-patch:
+      uv-minor-and-patch:
         applies-to: version-updates
         update-types:
         - "minor"
         - "patch"
-  - package-ecosystem: "pip" # See documentation for possible values
+  - package-ecosystem: "uv" # See documentation for possible values
     directory: "/apikeyclient" # Location of package manifests
     schedule:
       interval: "weekly"
     groups:
-      pip-minor-and-patch:
+      uv-minor-and-patch:
         applies-to: version-updates
         update-types:
         - "minor"
