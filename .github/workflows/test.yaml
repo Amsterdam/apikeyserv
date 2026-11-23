@@ -86,9 +86,9 @@ jobs:
     - name: Combine coverage reports
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       run: |
-        uv run python -m coverage combine --keep .
-        uv run python -m coverage report --fail-under=95
-        uv run python -m coverage xml -o coverage-aggregate.xml
+        uv run --project server python -m coverage combine --keep .
+        uv run --project server python -m coverage report --fail-under=95
+        uv run --project server python -m coverage xml -o coverage-aggregate.xml
     - name: Upload coverage artifacts
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       uses: actions/upload-artifact@v4
