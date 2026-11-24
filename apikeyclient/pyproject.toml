@@ -10,7 +10,8 @@ dependencies = ['Django', 'pause>=0.3', 'requests', 'PyJWT[crypto]==2.15.1', 'bu
 [project.optional-dependencies]
 dev = [
     'build',
-    'twine'
+    'twine',
+    'ruff==0.17.5'
 ]
 test = ['pytest', 'pytest-cov', 'requests-mock']
 
@@ -22,11 +23,7 @@ testpaths = ["tests"]
 [project.urls]
 "Homepage" = "https://github.com/Amsterdam/apikeyserv"
 
-[tool.isort]
-profile = "black"
-line_length = 99
-
-[tool.black]
+[tool.ruff]
 line-length = 99
 exclude = '''
 /(
