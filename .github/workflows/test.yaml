@@ -43,16 +43,17 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
     - name: Install server dependencies
       working-directory: server
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install -r requirements_dev.txt
+        uv sync --group dev
     - name: Test Server with coverage
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       working-directory: server
       run: |
-        pytest
+        uv run pytest
       env:
         COVERAGE_FILE: ${{ github.workspace }}/.coverage.server
         DATABASE_HOST: localhost
@@ -60,19 +61,18 @@ jobs:
       if: matrix.python-version != env.COVERAGE_PYTHON_VERSION
       working-directory: server
       run: |
-        pytest --override-ini="addopts="
+        uv run pytest --override-ini="addopts="
       env:
         DATABASE_HOST: localhost
     - name: Install client dependencies
       working-directory: apikeyclient
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install .[test]
+        uv sync --extra test
     - name: Test Middleware with coverage
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       working-directory: apikeyclient
       run: |
-        pytest
+        uv run pytest
       env:
         COVERAGE_FILE: ${{ github.workspace }}/.coverage.apikeyclient
         DATABASE_HOST: localhost
@@ -80,15 +80,15 @@ jobs:
       if: matrix.python-version != env.COVERAGE_PYTHON_VERSION
       working-directory: apikeyclient
       run: |
-        pytest --override-ini="addopts="
+        uv run pytest --override-ini="addopts="
       env:
         DATABASE_HOST: localhost
     - name: Combine coverage reports
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       run: |
-        python -m coverage combine --keep .
-        python -m coverage report --fail-under=95
-        python -m coverage xml -o coverage-aggregate.xml
+        uv run --project server python -m coverage combine --keep .
+        uv run --project server python -m coverage report --fail-under=95
+        uv run --project server python -m coverage xml -o coverage-aggregate.xml
     - name: Upload coverage artifacts
       if: matrix.python-version == env.COVERAGE_PYTHON_VERSION
       uses: actions/upload-artifact@v4

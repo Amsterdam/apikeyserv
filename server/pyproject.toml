@@ -1,0 +1,27 @@
+[project]
+name = "apikeyserv-server"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "asgiref==3.13.0",
+    "cffi==2.1.1",
+    "cryptography==50.0.2",
+    "Django==5.2.19",
+    "django-cors-headers==4.9.0",
+    "django-healthchecks==1.6.0",
+    "psycopg2-binary==2.9.13",
+    "azure-identity==1.27.0",
+    "pycparser==3.12",
+    "PyJWT[crypto]==2.15.1",
+    "sqlparse==0.6.1",
+    "uwsgi==2.0.31",
+]
+
+[dependency-groups]
+dev = [
+    "setuptools>=84.2.1",
+    "pytest==9.2.0",
+    "pytest-cov==7.1.0",
+    "pytest-django==4.14.0",
+    "coverage",
+]

@@ -3,16 +3,27 @@ requires = ["setuptools", "wheel"]
 
 [project]
 name = "datadiensten-apikeyclient"
-version = "0.7.7"
+version = "0.8.0"
 description = "Client for Datadiensten apikeyserv"
-dependencies = ['Django', 'pause>=0.3', 'requests', 'PyJWT[crypto]==2.15.1', 'build']
+dependencies = [
+   "Django",
+   "pause>=0.3",
+   "requests",
+   "PyJWT[crypto]==2.15.1",
+   "build"
+]
 
 [project.optional-dependencies]
 dev = [
-    'build',
-    'twine'
+    "build",
+    "twine",
+    "ruff==0.17.5",
 ]
-test = ['pytest', 'pytest-cov', 'requests-mock']
+test = [
+    "pytest",
+    "pytest-cov",
+    "requests-mock",
+]
 
 [tool.pytest.ini_options]
 addopts = "--cov=apikeyclient --cov-config=../.coveragerc --cov-report=term-missing --cov-report=xml:coverage-apikeyclient.xml --cov-fail-under=99"
@@ -22,11 +33,7 @@ testpaths = ["tests"]
 [project.urls]
 "Homepage" = "https://github.com/Amsterdam/apikeyserv"
 
-[tool.isort]
-profile = "black"
-line_length = 99
-
-[tool.black]
+[tool.ruff]
 line-length = 99
 exclude = '''
 /(

@@ -17,29 +17,35 @@ Setup and running
 
 The easy option:
 
-    docker-compose up
+    cd server
+    uv sync
+    cd ..
+    cd client
+    uv sync
+    cd ..
+    docker compose up
 
 For local development, create a virtualenv, only start the database container
 then point to it in the environment and install dependencies:
 
-    docker-compose up -d database
+    docker compose up -d database
     export DATABASE_HOST=localhost
     export DATABASE_PORT=5438
     cd server
-    make install
+    uv sync
 
 For the first run, set up a user account and,
 then issue the following commands to install and start the service:
 
-    # docker-compose only
-    docker-compose exec web bash
+    # docker compose only
+    docker compose exec web bash
 
     cd server  # if not inside web image
-    pytest .
-    python manage.py makemigrations apikeys
-    python manage.py migrate
-    python manage.py createsuperuser  # Fill out the form
-    python manage.py runserver  # if not inside web image
+    uv run pytest .
+    uv run python manage.py makemigrations apikeys
+    uv run python manage.py migrate
+    uv run python manage.py createsuperuser  # Fill out the form
+    uv run python manage.py runserver  # if not inside web image
 
 Now generate a signing key:
 
@@ -58,40 +64,40 @@ Keys can be retired by unchecking their "active" flag.
 Managing requirements
 =========================
 
-This project uses [pip-tools](https://pypi.org/project/pip-tools/)
-and [pur](https://pypi.org/project/pur/) to manage the
-``requirements.txt`` file.
+This project uses astral uv to manage
+Python dependencies through pyproject.toml and uv.lock.
 
 To add a Python dependency to the project:
 
--  Add the dependency to ``requirements.in`` or ``requirements_dev.in``
--  Run ``make requirements``
+- Add the dependency to the [project.dependencies] section of pyproject.toml (or the appropriate optional dependency group).
+- Run uv add package-name to add the dependency and update the lockfile.
 
-To upgrade the project, run::
+To upgrade the project, run:
 
-    make upgrade
-    make install
-    make test
+    uv lock --upgrade
+    uv sync
+    uv run pytest
 
-Or in a single call: ``make upgrade install test``
+Or in a single call: ``uv lock --upgrade && uv sync && uv run pytest``
 
 Django will only be upgraded with patch-level versions.
-To change from e.g. Django 3.0 to 3.1, update the version in ``requirements.in`` yourself.
+To change from e.g. Django 3.0 to 3.1, update its version constraint
+in pyproject.toml and run uv lock to update the lockfile.
 
 
 Testing and coverage
 ====================
 
-Both Python subprojects collect coverage during their normal ``pytest`` runs.
+Both Python subprojects collect coverage during their normal ``uv run pytest`` runs.
 
 For the Django server:
 
-    docker-compose up -d database
+    docker compose up -d database
     export DATABASE_HOST=localhost
     export DATABASE_PORT=5438
     cd server
-    make install
-    pytest
+    uv sync
+    uv run pytest
 
 This writes a terminal coverage summary and ``coverage-server.xml`` in the
 ``server`` directory. The current local threshold is enforced by pytest-cov.
@@ -99,8 +105,8 @@ This writes a terminal coverage summary and ``coverage-server.xml`` in the
 For the client package:
 
     cd apikeyclient
-    python -m pip install .[test]
-    pytest
+    uv sync --extra test
+    uv run pytest
 
 This writes a terminal coverage summary and ``coverage-apikeyclient.xml`` in the
 ``apikeyclient`` directory. The client threshold is also enforced locally.
@@ -116,8 +122,9 @@ Deployment
 ==========
 
 For deployment the database credentials con be configured in the Django settings.
-The database needs to be initialized with `python manage.py migrate` (from a running container).
-A superuser (to access the `/admin`) can be added with `python manage.py createsuperuser`.
+The database needs to be initialized with `uv run python manage.py migrate`
+(from a running container).
+A superuser (to access the `/admin`) can be added with `uv run python manage.py createsuperuser`.
 
 Client services
 ===============
@@ -125,11 +132,11 @@ Client services
 This repository contains a client library for talking to apikeyserv.
 Install it with:
 
-    pip install datadiensten-apikeyclient
+    uv add datadiensten-apikeyclient
 
 or:
 
-    pip install 'git+https://github.com/Amsterdam/apikeyserv.git#subdirectory=apikeyclient'
+    uv add 'git+https://github.com/Amsterdam/apikeyserv.git#subdirectory=apikeyclient'
 
 
 Security and privacy
@@ -157,8 +164,8 @@ A bare-bones Django client has been added tot test the Django middleware
 locally. Assuming that a virtualenv has been created and activated:
 
     cd client
-    pip install -r requirements.txt
-    python __init__.py runserver localhost:nnnn  # port not conflicting with api key server
+    uv sync
+    uv run python __init__.py runserver localhost:nnnn  # port not conflicting with api key server
 
 The Django settings variables `APIKEY_ENDPOINT` and `APIKEY_MANDATORY` (0 or 1)
 that are needed for the middleware component can be configured as environment variables.
