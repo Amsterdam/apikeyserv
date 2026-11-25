@@ -72,7 +72,7 @@ To add a Python dependency to the project:
 - Add the dependency to the [project.dependencies] section of pyproject.toml (or the appropriate optional dependency group).
 - Run uv add package-name to add the dependency and update the lockfile.
 
-To upgrade the project, run::
+To upgrade the project, run:
 
     uv lock --upgrade
     uv sync
