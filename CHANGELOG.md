@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-01 (v0.8.0)
+
+* Toolchain update use uv instead of pip.
+
 ## 2026-10-01 (v0.7.7)
 
 * Upgrade packages with vulnerabilities.
